@@ -1,7 +1,7 @@
 {
-  "name": "YourProject",
+  "name": "Drive3D",
   "version": "0.0.1",
-  "description": "Description of your project",
+  "description": "Google Drive 4 Google Carboard",
   "dependencies": {},
   "devDependencies": {
     "browser-sync": "^2.9.10",
