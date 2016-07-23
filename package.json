@@ -2,7 +2,10 @@
   "name": "Drive3D",
   "version": "0.0.1",
   "description": "Google Drive 4 Google Carboard",
-  "dependencies": {},
+  "dependencies": {
+    "browserify": "^13.0.1",
+    "dropbox": "^2.0.0"
+  },
   "devDependencies": {
     "browser-sync": "^2.9.10",
     "gulp": "^3.9.0",
