@@ -22,6 +22,215 @@
 		"outputPathIsSetByUser": 0,
 		"outputStyle": 1
 		},
+	"\/images\/crosshair.png": {
+		"fileType": 32768,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 110,
+		"inputAbbreviatedPath": "\/images\/crosshair.png",
+		"outputAbbreviatedPath": "\/images\/crosshair.png",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
+	"\/images\/skybox\/0.png": {
+		"fileType": 32768,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 117073,
+		"inputAbbreviatedPath": "\/images\/skybox\/0.png",
+		"outputAbbreviatedPath": "\/images\/skybox\/0.png",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
+	"\/images\/skybox\/1.png": {
+		"fileType": 32768,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 135990,
+		"inputAbbreviatedPath": "\/images\/skybox\/1.png",
+		"outputAbbreviatedPath": "\/images\/skybox\/1.png",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
+	"\/images\/skybox\/2.png": {
+		"fileType": 32768,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 125260,
+		"inputAbbreviatedPath": "\/images\/skybox\/2.png",
+		"outputAbbreviatedPath": "\/images\/skybox\/2.png",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
+	"\/images\/skybox\/3.png": {
+		"fileType": 32768,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 127146,
+		"inputAbbreviatedPath": "\/images\/skybox\/3.png",
+		"outputAbbreviatedPath": "\/images\/skybox\/3.png",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
+	"\/images\/skybox\/4.png": {
+		"fileType": 32768,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 359439,
+		"inputAbbreviatedPath": "\/images\/skybox\/4.png",
+		"outputAbbreviatedPath": "\/images\/skybox\/4.png",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
+	"\/images\/skybox\/5.png": {
+		"fileType": 32768,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 2315,
+		"inputAbbreviatedPath": "\/images\/skybox\/5.png",
+		"outputAbbreviatedPath": "\/images\/skybox\/5.png",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
+	"\/images\/skybox\/new\/xneg.png": {
+		"fileType": 32768,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 121965,
+		"inputAbbreviatedPath": "\/images\/skybox\/new\/xneg.png",
+		"outputAbbreviatedPath": "\/images\/skybox\/new\/xneg.png",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
+	"\/images\/skybox\/new\/xpos.png": {
+		"fileType": 32768,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 132101,
+		"inputAbbreviatedPath": "\/images\/skybox\/new\/xpos.png",
+		"outputAbbreviatedPath": "\/images\/skybox\/new\/xpos.png",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
+	"\/images\/skybox\/new\/yneg.png": {
+		"fileType": 32768,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 3209,
+		"inputAbbreviatedPath": "\/images\/skybox\/new\/yneg.png",
+		"outputAbbreviatedPath": "\/images\/skybox\/new\/yneg.png",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
+	"\/images\/skybox\/new\/ypos.png": {
+		"fileType": 32768,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 371852,
+		"inputAbbreviatedPath": "\/images\/skybox\/new\/ypos.png",
+		"outputAbbreviatedPath": "\/images\/skybox\/new\/ypos.png",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
+	"\/images\/skybox\/new\/zneg.png": {
+		"fileType": 32768,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 132448,
+		"inputAbbreviatedPath": "\/images\/skybox\/new\/zneg.png",
+		"outputAbbreviatedPath": "\/images\/skybox\/new\/zneg.png",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
+	"\/images\/skybox\/new\/zpos.png": {
+		"fileType": 32768,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 143077,
+		"inputAbbreviatedPath": "\/images\/skybox\/new\/zpos.png",
+		"outputAbbreviatedPath": "\/images\/skybox\/new\/zpos.png",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
+	"\/images\/skybox\/new2\/xneg.png": {
+		"fileType": 32768,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 418446,
+		"inputAbbreviatedPath": "\/images\/skybox\/new2\/xneg.png",
+		"outputAbbreviatedPath": "\/images\/skybox\/new2\/xneg.png",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
+	"\/images\/skybox\/new2\/xpos.png": {
+		"fileType": 32768,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 484439,
+		"inputAbbreviatedPath": "\/images\/skybox\/new2\/xpos.png",
+		"outputAbbreviatedPath": "\/images\/skybox\/new2\/xpos.png",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
+	"\/images\/skybox\/new2\/yneg.png": {
+		"fileType": 32768,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 20542,
+		"inputAbbreviatedPath": "\/images\/skybox\/new2\/yneg.png",
+		"outputAbbreviatedPath": "\/images\/skybox\/new2\/yneg.png",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
+	"\/images\/skybox\/new2\/ypos.png": {
+		"fileType": 32768,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 854986,
+		"inputAbbreviatedPath": "\/images\/skybox\/new2\/ypos.png",
+		"outputAbbreviatedPath": "\/images\/skybox\/new2\/ypos.png",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
+	"\/images\/skybox\/new2\/zneg.png": {
+		"fileType": 32768,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 497698,
+		"inputAbbreviatedPath": "\/images\/skybox\/new2\/zneg.png",
+		"outputAbbreviatedPath": "\/images\/skybox\/new2\/zneg.png",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
+	"\/images\/skybox\/new2\/zpos.png": {
+		"fileType": 32768,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 488739,
+		"inputAbbreviatedPath": "\/images\/skybox\/new2\/zpos.png",
+		"outputAbbreviatedPath": "\/images\/skybox\/new2\/zpos.png",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
 	"\/images\/textures\/patterns\/checker.png": {
 		"fileType": 32768,
 		"ignore": 0,
@@ -119,6 +328,17 @@
 		"outputStyle": 1,
 		"syntaxCheckerStyle": 1
 		},
+	"\/scripts\/FirstPersonControls.js": {
+		"fileType": 64,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"inputAbbreviatedPath": "\/scripts\/FirstPersonControls.js",
+		"outputAbbreviatedPath": "\/scripts\/min\/FirstPersonControls-min.js",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"outputStyle": 1,
+		"syntaxCheckerStyle": 1
+		},
 	"\/scripts\/jquery-2.2.4.min.js": {
 		"fileType": 64,
 		"ignore": 0,
@@ -158,6 +378,28 @@
 		"ignoreWasSetByUser": 0,
 		"inputAbbreviatedPath": "\/scripts\/min\/drivelogic-min.js",
 		"outputAbbreviatedPath": "\/scripts\/min\/min\/drivelogic-min-min.js",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"outputStyle": 1,
+		"syntaxCheckerStyle": 1
+		},
+	"\/scripts\/min\/OrbitControls-min.js": {
+		"fileType": 64,
+		"ignore": 1,
+		"ignoreWasSetByUser": 0,
+		"inputAbbreviatedPath": "\/scripts\/min\/OrbitControls-min.js",
+		"outputAbbreviatedPath": "\/scripts\/min\/min\/OrbitControls-min-min.js",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"outputStyle": 1,
+		"syntaxCheckerStyle": 1
+		},
+	"\/scripts\/min\/TweenMax.min.js": {
+		"fileType": 64,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"inputAbbreviatedPath": "\/scripts\/min\/TweenMax.min.js",
+		"outputAbbreviatedPath": "\/scripts\/min\/min\/TweenMax.min-min.js",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0,
 		"outputStyle": 1,
@@ -371,8 +613,8 @@
 	},
 "projectAttributes": {
 	"bowerAbbreviatedPath": "",
-	"displayValue": "app",
-	"displayValueWasSetByUser": 0,
+	"displayValue": "Dropbox3D",
+	"displayValueWasSetByUser": 1,
 	"iconImageName": "harddrive_gray"
 	},
 "projectSettings": {

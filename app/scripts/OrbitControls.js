@@ -33,7 +33,8 @@ THREE.OrbitControls = function ( object, domElement ) {
 
   // "target" sets the location of focus, where the control orbits around
   // and where it pans with respect to.
-  this.target = new THREE.Vector3();
+  this.target = new THREE.Vector3().addVectors(/*new line for readability*/
+    object.position, object.getWorldDirection());
 
   // center is old, deprecated; use "target" instead
   this.center = this.target;
