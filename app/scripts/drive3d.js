@@ -1,9 +1,8 @@
 // TODO: Sound feedback
 // TODO: Animation (fall from sky?)
-// TODO: Raycasting Animation
-// TODO: refactor getting folders and traveling
-// TODO: fix PATH
-
+// TODO: Intro screen
+// TODO: Meshes for common file types
+// TODO: finish file case switches
 
 // Boilerplate
 var camera, scene, renderer;
@@ -14,7 +13,7 @@ var raycaster = new THREE.Raycaster();
 var ray = new THREE.Vector2(0.0, 0.0);
 
 // Programmatic
-
+var wooferRaw;
 
 var intersectWithArr = [];
 // colladaLoader
@@ -23,7 +22,7 @@ var colladaLoader = new THREE.ColladaLoader(manager);
 
 var rayCastSphere;
 var isPaused = false;
-var folder, folders = [];
+var folder, files = [];
 var folderContainer = [];
 var stareAtObject = false;
 //allow for cleartimeout of stare function
@@ -42,12 +41,12 @@ var tl = new TimelineLite();
 
 var manager = new THREE.LoadingManager();
 manager.onProgress = function(item, loaded, total) {
-  console.log(loaded/total*100 + "%");
-    document.getElementById("status").innerHTML = ("Loading the goodies<br /><br />" + Math.round(loaded/total*100) + "%");
+    console.log(loaded / total * 100 + "%");
+    document.getElementById("status").innerHTML = ("Loading the goodies<br /><br />" + Math.round(loaded / total * 100) + "%");
 }
 
 manager.onLoad = function() {
-    console.log("ready to go!");
+    // console.log("ready to go!");
     init();
     animate();
 }
@@ -94,7 +93,7 @@ function init() {
     scene = new THREE.Scene();
 
     camera = new THREE.PerspectiveCamera(90, 1, 0.001, 6000);
-    camera.position.set(0, 10, 0);
+    camera.position.set(0, 20, 0);
     scene.add(camera);
 
     // controls = new THREE.OrbitControls(camera, element);
@@ -161,11 +160,12 @@ function init() {
     var geometry = new THREE.PlaneGeometry(500, 500);
     var mesh = new THREE.Mesh(geometry, material);
     mesh.name = "plane";
-    intersectWithArr.push(mesh);
 
     mesh.rotation.x = -Math.PI / 2;
     mesh.position.y = -3;
-    scene.add(mesh);
+    // intersectWithArr.push(mesh);
+
+    // scene.add(mesh);
 
 
     scene.add(skyBox);
@@ -187,6 +187,7 @@ function init() {
 
     //GO
     getFiles(PATH);
+
 } //end init
 
 function getFiles(folder) {
@@ -199,7 +200,7 @@ function getFiles(folder) {
             path: folder
         })
         .then(function(response) {
-            createFolders(response);
+            createfiles(response);
         }).then(function() {
             travel();
         })
@@ -223,14 +224,14 @@ function getFiles(folder) {
 
         });
 
-    function createFolders(response) {
+    function createfiles(response) {
         //circle vars
         var r = 80;
         var s = radians(0);
         var t = radians(50);
         var inc = radians(360 / response.entries.length);
 
-        //where all folders + text references go
+        //where all files + text references go
         folderContainer.push([]);
 
         //create folder gfx
@@ -238,7 +239,6 @@ function getFiles(folder) {
             var xCord = r * Math.cos(s) * Math.sin(t);
             var yCord = r * Math.sin(s) * Math.sin(t) + (floor * multiplier);
             var zCord = r * Math.cos(t);
-
             makeModel(xCord, yCord, zCord, response.entries[entry]);
             createText(xCord, yCord, zCord, response.entries[entry]);
             t -= inc;
@@ -246,34 +246,69 @@ function getFiles(folder) {
         }
 
         function makeModel(xCord, yCord, zCord, entry) {
-            // console.log("model created at: " + xCord, yCord, zCord);
-            colladaLoader.load('models/folder2.dae', function(colladaObj) {
-                var folderRaw = colladaObj.scene.children[0].children[0];
-                var folder = new THREE.Object3D();
-                folder.add(new THREE.Mesh(folderRaw.geometry, folderRaw.material));
-                folder.scale.set(10, 10, 10);
-                // folder.rotateX(radians(90));
-                // folder.rotateY(radians(340));
-                folder.name = entry.name;
-                folder.tier = floor;
 
-                // folder.path = response.entries[entry].path_lower;
-                folder.position.set(xCord, yCord, zCord);
+            switch (entry[".tag"]) {
+                case "folder":
+                    // console.log("folder");
+                    colladaLoader.load('models/folder2.dae', function(colladaObj) {
+                        var folderRaw = colladaObj.scene.children[0].children[0];
+                        var folder = new THREE.Object3D();
+                        folder.add(new THREE.Mesh(folderRaw.geometry, folderRaw.material));
+                        folder.scale.set(10, 10, 10);
+                        folder.name = entry.name;
+                        folder.type = "folder";
+                        folder.tier = floor;
 
-                // folder.lookAt(camera);
+                        // folder.path = response.entries[entry].path_lower;
+                        folder.position.set(xCord, yCord, zCord);
 
-                scene.add(folder);
-                folders.push(folder);
-                intersectWithArr.push(folder);
-                // console.log(folderContainer);
-                folderContainer[folderContainer.length - 1].push(folder);
-                // console.log(folder);
-                tl.to(folder.position, 1, {
-                    y: yCord,
-                    timeScale: 6,
-                    ease: Quad.easeOut
-                }, 0.8);
-            });
+                        // folder.lookAt(camera);
+
+                        scene.add(folder);
+                        files.push(folder);
+                        intersectWithArr.push(folder);
+                        // console.log(folderContainer);
+                        folderContainer[folderContainer.length - 1].push(folder);
+                        // console.log(folder);
+                        tl.to(folder.position, 1, {
+                            y: yCord,
+                            timeScale: 6,
+                            ease: Quad.easeOut
+                        }, 0.8);
+                    });
+                    break;
+
+                case "file":
+
+                    // console.log(entry.path_lower);
+                    var filename = entry.path_lower.split('.');
+                    var filetype = filename[filename.length - 1];
+
+                    // console.log("file");
+                    colladaLoader.load('models/woofer.dae', function(colladaObj) {
+
+                        var wooferRaw = colladaObj.scene;
+                        wooferRaw.scale.set(0.4, 0.4, 0.4);
+                        wooferRaw.rotation.x = (radians(270));
+                        wooferRaw.position.set(xCord, yCord, zCord);
+                        wooferRaw.name = entry.name;
+                        wooferRaw.tier = floor;
+                        wooferRaw.type = filetype;
+
+                        scene.add(wooferRaw);
+                        files.push(wooferRaw);
+                        intersectWithArr.push(wooferRaw);
+                        folderContainer[folderContainer.length - 1].push(wooferRaw);
+
+                    });
+                    break;
+
+
+                default:
+                    break;
+
+
+            }
             //end makeModel
         }
         // create folder descriptions
@@ -301,15 +336,11 @@ function getFiles(folder) {
                 mesh.lookAt(camera.position);
                 scene.add(mesh);
                 folderContainer[folderContainer.length - 1].push(mesh);
-
-                // tl.to(mesh.position, 1, {
-                //     y: yCord + 25,
-                //     ease: Quad.easeOut
-                // }, 0.8, '-=1');
             });
         } // End TextGeometry
     }
     // stareAtObject = true;
+
 } // end getFiles
 
 
@@ -322,14 +353,7 @@ function rayCast() {
     var intersects = raycaster.intersectObjects(intersectWithArr, true);
     // console.log(intersects.length);
 
-    if (intersects.length != 0 && intersects[0].object.name != "plane") {
-        if (!stareAtObject) {
-            var objectName = intersects[0].object.parent.name
-            open(objectName);
-            // console.log("staring at something? " + stareAtObject);
-        }
-
-    } else if (intersects.length == 0) {
+    if (intersects.length == 0) {
         stareAtObject = false;
         clearTimeout(stareTimeout);
         rayCastSphere.animate = false;
@@ -337,11 +361,19 @@ function rayCast() {
 
         // console.log("staring at something? " + stareAtObject);
 
+    } else if (intersects.length != 0 && intersects[0].object.name != "plane") {
+        if (!stareAtObject) {
+            var objectName = intersects[0].object.parent.name
+            open(objectName);
+            // console.log("staring at something? " + stareAtObject);
+        }
+
     } else if (intersects.length != 0 && intersects[0].object.name == "plane" && floor > 0) {
         // stareAtObject = true;
-
         // console.log("staring at something? " + stareAtObject);
         if (!stareAtObject) {
+          rayCastSphere.animate = false;
+          rayCastSphere.scale.set(1, 1, 1);
             open();
         }
     }
@@ -417,8 +449,12 @@ function render(dt) {
 
 function animate(t) {
 
-    for (folder in folders) {
-        folders[folder].rotation.y -= 0.01;
+    for (file in files) {
+        if (files[file].type != "folder") {
+            files[file].rotation.z -= 0.01;
+        } else {
+            files[file].rotation.y -= 0.01;
+        }
     }
     if (rayCastSphere.animate) {
         rayCastSphere.scale.x += 0.05;

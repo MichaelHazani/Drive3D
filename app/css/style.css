@@ -13,9 +13,10 @@ body {
 }
 #status {
   /*position: absolute;*/
-  font-size:3em;
-  width: 100%;
-  text-align: center;
+  font-size:2em;
+  width: 50%;
+  margin-top:0%;
+  text-align: left;
   font-style: 'courier new';
   color: green;
 }
