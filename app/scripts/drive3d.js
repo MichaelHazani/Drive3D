@@ -12,8 +12,9 @@ var clock = new THREE.Clock();
 var raycaster = new THREE.Raycaster();
 var ray = new THREE.Vector2(0.0, 0.0);
 
+
 // Programmatic
-var wooferRaw;
+// var wooferRaw; DEL
 
 var intersectWithArr = [];
 // colladaLoader
@@ -38,11 +39,13 @@ var multiplier = 130;
 var tl = new TimelineLite();
 
 
+// --------------------------------------------------------------------------------PRELOADERS-----------------------------------------------------
+
 
 var manager = new THREE.LoadingManager();
 manager.onProgress = function(item, loaded, total) {
     console.log(loaded / total * 100 + "%");
-    document.getElementById("status").innerHTML = ("Loading the goodies<br /><br />" + Math.round(loaded / total * 100) + "%");
+    document.getElementById("status").innerHTML = ("Loading resources<br /><br />" + Math.round(loaded / total * 100) + "%");
 }
 
 manager.onLoad = function() {
@@ -66,10 +69,33 @@ for (var i = 0; i < 6; i++)
 var skyMaterial = new THREE.MeshFaceMaterial(materialArray);
 var skyBox = new THREE.Mesh(skyGeometry, skyMaterial);
 
+// filetype images
+var fileIcons = {
+    image: new THREE.TextureLoader(manager).load(
+        'images/filetypes/image.png'
+    ),
+    document: new THREE.TextureLoader(manager).load(
+        'images/filetypes/document.png'
+    ),
+    html: new THREE.TextureLoader(manager).load(
+        'images/filetypes/html.png'
+    ),
+    pdf: new THREE.TextureLoader(manager).load(
+        'images/filetypes/pdf.png'
+    ),
+    music: new THREE.TextureLoader(manager).load(
+        'images/filetypes/music.png'
+    ),
+    other: new THREE.TextureLoader(manager).load(
+        'images/filetypes/file.png'
+    ),
+    zip: new THREE.TextureLoader(manager).load(
+        'images/filetypes/zip.png'
+    ),
+}
+
+
 // --------------------------------------------------------------------------------INIT---------------------------------------------------------------------
-
-
-
 
 
 function init() {
@@ -86,7 +112,7 @@ function init() {
     // renderer.setSize( WW, HH );
     // renderer.setViewport( 0, 0, WW*DPR, HH*DPR );
     renderer.setPixelRatio(DPR);
-    console.log(renderer);
+
 
     effect = new THREE.StereoEffect(renderer);
 
@@ -95,16 +121,6 @@ function init() {
     camera = new THREE.PerspectiveCamera(90, 1, 0.001, 6000);
     camera.position.set(0, 20, 0);
     scene.add(camera);
-
-    // controls = new THREE.OrbitControls(camera, element);
-    // controls.rotateUp(Math.PI / 4);
-    // controls.target.set(
-    //     camera.position.x + 0.1,
-    //     camera.position.y,
-    //     camera.position.z
-    // );
-    // controls.noZoom = true;
-    // controls.noPan = true;
 
     controls = new THREE.FirstPersonControls(camera);
     controls.movementSpeed = 0;
@@ -127,7 +143,7 @@ function init() {
     }
     window.addEventListener('deviceorientation', setOrientationControls, true);
     window.addEventListener('keypress', function(key) {
-        console.log(key);
+        // console.log(key);
         if (key.keyCode == 112) {
             isPaused = !isPaused;
         }
@@ -163,9 +179,9 @@ function init() {
 
     mesh.rotation.x = -Math.PI / 2;
     mesh.position.y = -3;
-    // intersectWithArr.push(mesh);
+    intersectWithArr.push(mesh);
 
-    // scene.add(mesh);
+    scene.add(mesh);
 
 
     scene.add(skyBox);
@@ -175,7 +191,7 @@ function init() {
     setTimeout(resize, 1);
 
 
-    //helper BALL
+    //helper raycast ball
     var sphereGeo = new THREE.SphereGeometry(1, 12, 30);
     sphereGeo.dynamic = true;
     var sphereMat = new THREE.MeshNormalMaterial();
@@ -188,13 +204,18 @@ function init() {
     //GO
     getFiles(PATH);
 
+
 } //end init
 
 function getFiles(folder) {
+
+
+
+
     stareAtObject = false;
     // Get Dropbox File Structure
     var dbx = new Dropbox({
-        accessToken: 'jP-3gUxYcvgAAAAAAABlsZHqfu6yw81fpKwUNvrz509F7BndLSErAGguza6hHqUJ'
+        accessToken: 'teyD2v5ZoUAAAAAAAAAAFqFsogr2_RN1uKfRkBWwFUqEWvFckbwD4la50O6IbKu0'
     });
     dbx.filesListFolder({
             path: folder
@@ -205,20 +226,19 @@ function getFiles(folder) {
             travel();
         })
         .catch(function(error) {
+            console.log("restarting, error: ");
             console.log(error);
+
             var restart = new Promise(function() {
                 // if error, delete all and init all
                 PATH = '';
                 floor = 0;
-                var count = 0;
-                for (folder in folderContainer) {
-                    // console.log(folderContainer[folder]);
-                    for (item in folderContainer[folder]) {
-                        scene.remove(folderContainer[folder][item]);
-                        console.log(count++);
-                    }
+                // var count = 0;
+                // console.log(folderContainer[folder]);
+                for (item in files) {
+                    scene.remove(item);
                 }
-                folderContainer = [];
+                files = [];
             });
             restart.then(getFiles(PATH));
 
@@ -268,7 +288,9 @@ function getFiles(folder) {
                         files.push(folder);
                         intersectWithArr.push(folder);
                         // console.log(folderContainer);
-                        folderContainer[folderContainer.length - 1].push(folder);
+
+                        // folderContainer[folderContainer.length - 1].push(folder);
+
                         // console.log(folder);
                         tl.to(folder.position, 1, {
                             y: yCord,
@@ -280,27 +302,96 @@ function getFiles(folder) {
 
                 case "file":
 
-                    // console.log(entry.path_lower);
-                    var filename = entry.path_lower.split('.');
-                    var filetype = filename[filename.length - 1];
+                    var fullName = entry.path_lower.split('.');
+                    var filetype = fullName[fullName.length - 1].toLowerCase();
 
-                    // console.log("file");
-                    colladaLoader.load('models/woofer.dae', function(colladaObj) {
+                    function chooseTexture(filetype) {
+                        switch (filetype) {
+                            case "zip":
+                                return fileIcons.zip;
 
-                        var wooferRaw = colladaObj.scene;
-                        wooferRaw.scale.set(0.4, 0.4, 0.4);
-                        wooferRaw.rotation.x = (radians(270));
-                        wooferRaw.position.set(xCord, yCord, zCord);
-                        wooferRaw.name = entry.name;
-                        wooferRaw.tier = floor;
-                        wooferRaw.type = filetype;
+                            case "url":
+                            case "html":
+                                return fileIcons.html;
 
-                        scene.add(wooferRaw);
-                        files.push(wooferRaw);
-                        intersectWithArr.push(wooferRaw);
-                        folderContainer[folderContainer.length - 1].push(wooferRaw);
 
+                            case "txt":
+                            case "doc":
+                            case "docx":
+                                return fileIcons.document;
+                            case "pdf":
+                                return fileIcons.pdf;
+
+                            case "mp3":
+                            case "wav":
+                            case "ogg":
+                            case "mp2":
+                            case "3gp":
+                            case "aif":
+                            case "aiff":
+                            case "m4a":
+                            case "m4b":
+                                return fileIcons.music;
+
+                            case "jpeg":
+                            case "gif":
+                            case "jpg":
+                            case "bmp":
+                            case "png":
+                            case "tiff":
+                                return fileIcons.image;
+
+
+                            default:
+                                return fileIcons.other;
+                                break;
+                        }
+                    }
+
+                    var fileMaterial = new THREE.MeshPhongMaterial({
+                        // color: 0x222222,
+                        // specular: 0xffffff,
+                        // shininess: 20,
+                        shading: THREE.FlatShading,
+                        map: chooseTexture(filetype),
+                        transparent: true,
+                        side: THREE.DoubleSide
                     });
+                    var fileGeometry = new THREE.PlaneGeometry(25, 25);
+                    var file = new THREE.Mesh(fileGeometry, fileMaterial);
+                    file.position.set(xCord, yCord, zCord);
+                    file.name = entry.name;
+                    file.tier = floor;
+                    file.type = filetype;
+                    // file.lookAt(camera.position);
+
+                    scene.add(file);
+                    files.push(file);
+                    intersectWithArr.push(file);
+                    // folderContainer[folderContainer.length - 1].push(file);
+
+
+
+
+                    // // console.log(entry.path_lower);
+                    // var filename = entry.path_lower.split('.');
+                    // var filetype = filename[filename.length - 1];
+                    //
+                    // // console.log("file");
+                    // colladaLoader.load('models/woofer.dae', function(colladaObj) {
+                    //
+                    //     var wooferRaw = colladaObj.scene;
+                    //     wooferRaw.scale.set(0.4, 0.4, 0.4);
+                    //     wooferRaw.rotation.x = (radians(270));
+                    //     wooferRaw.position.set(xCord, yCord, zCord);
+                    //     wooferRaw.name = entry.name;
+                    //     wooferRaw.tier = floor;
+                    //     wooferRaw.type = filetype;
+                    //
+                    //     scene.add(wooferRaw);
+                    //     files.push(wooferRaw);
+                    //     intersectWithArr.push(wooferRaw);
+                    //     folderContainer[folderContainer.length - 1].push(wooferRaw);
                     break;
 
 
@@ -333,9 +424,11 @@ function getFiles(folder) {
                 textGeo.applyMatrix(new THREE.Matrix4().makeTranslation(xMiddle * -1, 0, 0));
                 mesh.position.set(xCord, yCord + 25, zCord);
                 mesh.tier = floor;
+                mesh.type = "text";
+                files.push(mesh);
                 mesh.lookAt(camera.position);
                 scene.add(mesh);
-                folderContainer[folderContainer.length - 1].push(mesh);
+                // folderContainer[folderContainer.length - 1].push(mesh);
             });
         } // End TextGeometry
     }
@@ -363,7 +456,11 @@ function rayCast() {
 
     } else if (intersects.length != 0 && intersects[0].object.name != "plane") {
         if (!stareAtObject) {
-            var objectName = intersects[0].object.parent.name
+            if (intersects[0].object.parent != null) {
+                var objectName = intersects[0].object.parent.name
+            } else {
+                var objectName = intersects[0].object.name
+            }
             open(objectName);
             // console.log("staring at something? " + stareAtObject);
         }
@@ -372,8 +469,8 @@ function rayCast() {
         // stareAtObject = true;
         // console.log("staring at something? " + stareAtObject);
         if (!stareAtObject) {
-          rayCastSphere.animate = false;
-          rayCastSphere.scale.set(1, 1, 1);
+            rayCastSphere.animate = false;
+            rayCastSphere.scale.set(1, 1, 1);
             open();
         }
     }
@@ -407,10 +504,12 @@ function open(objectName) {
 
         stareTimeout = setTimeout(function() {
             // remove file tier
-            for (item in folderContainer[floor]) {
-                scene.remove(folderContainer[floor][item]);
+            for (item in files) {
+                if (files[item].tier == floor) {
+                    scene.remove(files[item]);
+                }
             }
-            folderContainer.pop();
+            // folderContainer.pop();
 
             //to avoid root="" situations
             if (PATH.indexOf('/') != -1) {
@@ -442,6 +541,7 @@ function travel() {
 function render(dt) {
     rayCast();
 
+
     effect.render(scene, camera);
 
     // renderer.render(scene, camera);
@@ -450,16 +550,17 @@ function render(dt) {
 function animate(t) {
 
     for (file in files) {
-        if (files[file].type != "folder") {
-            files[file].rotation.z -= 0.01;
-        } else {
-            files[file].rotation.y -= 0.01;
+        if (files[file].type == "folder") {
+            files[file].rotation.y += 0.01;
+        } else if (files[file].type != "text") {
+            files[file].rotation.y += 0.01;
         }
     }
+
     if (rayCastSphere.animate) {
-        rayCastSphere.scale.x += 0.05;
-        rayCastSphere.scale.y += 0.05;
-        rayCastSphere.scale.z += 0.05;
+        rayCastSphere.scale.x += 0.03;
+        rayCastSphere.scale.y += 0.03;
+        rayCastSphere.scale.z += 0.03;
     }
 
 
