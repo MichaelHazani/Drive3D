@@ -92,6 +92,9 @@ var fileIcons = {
     zip: new THREE.TextureLoader(manager).load(
         'images/filetypes/zip.png'
     ),
+    fileImage: function(filePath) {
+      new THREE.TextureLoader(manager).load(filePath);
+    }
 }
 
 
@@ -207,7 +210,7 @@ function init() {
 
 } //end init
 
-function getFiles(folder) {
+function getFiles(PATH) {
 
 
 
@@ -217,10 +220,13 @@ function getFiles(folder) {
     var dbx = new Dropbox({
         accessToken: 'teyD2v5ZoUAAAAAAAAAAFqFsogr2_RN1uKfRkBWwFUqEWvFckbwD4la50O6IbKu0'
     });
+    console.log(dbx);
     dbx.filesListFolder({
-            path: folder
+            path: PATH,
+            // recursive: true
         })
         .then(function(response) {
+          console.log(response);
             createfiles(response);
         }).then(function() {
             travel();
@@ -269,7 +275,6 @@ function getFiles(folder) {
 
             switch (entry[".tag"]) {
                 case "folder":
-                    // console.log("folder");
                     colladaLoader.load('models/folder2.dae', function(colladaObj) {
                         var folderRaw = colladaObj.scene.children[0].children[0];
                         var folder = new THREE.Object3D();
@@ -331,6 +336,7 @@ function getFiles(folder) {
                             case "aiff":
                             case "m4a":
                             case "m4b":
+                            return
                                 return fileIcons.music;
 
                             case "jpeg":
@@ -339,7 +345,9 @@ function getFiles(folder) {
                             case "bmp":
                             case "png":
                             case "tiff":
-                                return fileIcons.image;
+                            console.log(entry);
+                            return fileIcons.image;
+                                // return fileIcons.fileImage(filePath);
 
 
                             default:
@@ -455,13 +463,14 @@ function rayCast() {
         // console.log("staring at something? " + stareAtObject);
 
     } else if (intersects.length != 0 && intersects[0].object.name != "plane") {
+      // console.log(intersects[0].object);
         if (!stareAtObject) {
             if (intersects[0].object.parent != null) {
-                var objectName = intersects[0].object.parent.name
+                var object = intersects[0].object.parent;
             } else {
-                var objectName = intersects[0].object.name
+                var object = intersects[0].object;
             }
-            open(objectName);
+            open(object);
             // console.log("staring at something? " + stareAtObject);
         }
 
@@ -477,29 +486,29 @@ function rayCast() {
 
 }
 
-function open(objectName) {
+function open(object) {
+console.log(object);
     // console.log("floor: " + floor);
-    if (objectName != undefined) {
+    if (object != undefined) {
         stareAtObject = true;
-        console.log("staring at " + objectName);
+        console.log("staring at ");
+        console.log(object);
 
         rayCastSphere.animate = true;
 
         stareTimeout = setTimeout(function() {
             console.log("going up!");
-            PATH += "/" + objectName;
+            PATH += "/" + object.name;
             floor += 1;
 
             console.log("up! Path is: " + PATH);
             getFiles(PATH);
-            // travel();
-
 
         }, 1500);
     } else {
 
         stareAtObject = true;
-        console.log("starting at floor");
+        console.log("staring at floor");
         rayCastSphere.animate = true;
 
         stareTimeout = setTimeout(function() {
