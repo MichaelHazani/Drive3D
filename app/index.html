@@ -1,27 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Cardboard Example</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-<link rel="stylesheet" href="./css/style.css">
-  </head>
+    <head>
+        <title>Cardboard Example</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="stylesheet" href="./css/style.css">
+    </head>
 
     <body onload="setTimeout(function() { window.scrollTo(0, 1) }, 100);">
-    <div id="example"></div>
-    <div id="status"></div>
-  <script src="scripts/jquery-2.2.4.min.js"></script>
-<script src="https://npmcdn.com/dropbox/dist/Dropbox-sdk.min.js"></script>
-    <script src="scripts/app.js"></script>
-  <script src="scripts/three.min.js"></script>
-<script src="scripts/min/TweenMax.min.js"></script>
-
-  <script src="scripts/FirstPersonControls.js"></script>
-  <script src="scripts/ColladaLoader.js"></script>
-  <script src="scripts/OrbitControls.js"></script>
-  <script src="scripts/DeviceOrientationControls.js"></script>
-  <script src="scripts/StereoEffect.js"></script>
-    <script src="scripts/drive3d.js"></script>
-  </body>
+        <div id="example"></div>
+        <div class="rotating progress" id="progress"></div>
+        <div id="status"></div>
+        <script src="scripts/src/min/jquery-2.2.4.min.js"></script>
+        <script src="https://cdn.rawgit.com/kimmobrunfeldt/progressbar.js/0.6.1/dist/progressbar.js"></script>
+        <script src="https://npmcdn.com/dropbox/dist/Dropbox-sdk.min.js"></script>
+        <script src="scripts/src/app.js"></script>
+        <script src="scripts/src/min/three.min.js"></script>
+        <script src="scripts/src/min/TweenMax.min.js"></script>
+        <script src="scripts/src/FirstPersonControls.js"></script>
+        <script src="scripts/src/ColladaLoader.js"></script>
+        <script src="scripts/src/OrbitControls.js"></script>
+        <script src="scripts/src/DeviceOrientationControls.js"></script>
+        <script src="scripts/src/StereoEffect.js"></script>
+        <!-- <script src="scripts/src/drive3d.js"></script> -->
+        <script src="scripts/src/db.js"></script>
+    </body>
 </html>

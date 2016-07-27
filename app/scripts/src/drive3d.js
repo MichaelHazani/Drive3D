@@ -1,11 +1,21 @@
+// EMERGENCY TODO:
+// rotation
+// Sorting every floor
+
+
 // TODO: Sound feedback
 // TODO: Animation (fall from sky?)
 // TODO: Intro screen
-// TODO: Meshes for common file types
 // TODO: finish file case switches
+// TODO: Preview images
+// TODO: Loader
 
 // Boilerplate
-var camera, scene, renderer;
+var camera = new THREE.PerspectiveCamera(90, 1, 0.001, 6000),
+    scene = new THREE.Scene(),
+    renderer = new THREE.WebGLRenderer({
+        alpha: true
+    });
 var effect, controls;
 var element, container;
 var clock = new THREE.Clock();
@@ -14,10 +24,7 @@ var ray = new THREE.Vector2(0.0, 0.0);
 
 
 // Programmatic
-// var wooferRaw; DEL
 var organizedDB = {};
-
-
 var intersectWithArr = [];
 // colladaLoader
 var colladaLoader = new THREE.ColladaLoader(manager);
@@ -27,7 +34,8 @@ var rayCastSphere;
 var isPaused = false;
 var folder, files = [];
 var folderContainer = [];
-var stareAtObject = false;
+var staring = false;
+var staredObject;
 //allow for cleartimeout of stare function
 var stareTimeout;
 // current file path
@@ -42,17 +50,32 @@ var multiplier = 130;
 var tl = new TimelineLite();
 
 
+
 // --------------------------------------------------------------------------------PRELOADERS-----------------------------------------------------
 
 
+var circle = new ProgressBar.Circle('#progress', {
+    color: '#8A2BE2',
+    trailColor: '#eee',
+    strokeWidth: 3,
+    duration: 250,
+    easing: 'easeInOut'
+});
+
 var manager = new THREE.LoadingManager();
 manager.onProgress = function(item, loaded, total) {
-    console.log(loaded / total * 100 + "%");
-    document.getElementById("status").innerHTML = ("Loading resources<br /><br />" + Math.round(loaded / total * 100) + "%");
+  var percent = loaded / total;
+    console.log(Math.round(percent * 100) + "%");
+
+circle.animate(percent)
+// document.getElementById("status").innerHTML = percent + "%";
 }
+
+
 
 manager.onLoad = function() {
     // console.log("ready to go!");
+    $('#progress').remove();
     init();
     animate();
 }
@@ -100,15 +123,21 @@ var fileIcons = {
     }
 }
 
+//plane TextureLoader
+var planeTexture = new THREE.TextureLoader().load(
+    'images/textures/patterns/checker.png'
+);
+planeTexture.wrapS = THREE.RepeatWrapping;
+planeTexture.wrapT = THREE.RepeatWrapping;
+planeTexture.repeat = new THREE.Vector2(50, 50);
+planeTexture.anisotropy = renderer.getMaxAnisotropy();
+
 
 // --------------------------------------------------------------------------------INIT---------------------------------------------------------------------
 
 
 function init() {
 
-    renderer = new THREE.WebGLRenderer({
-        alpha: true
-    });
     element = renderer.domElement;
     container = document.getElementById('example');
     container.appendChild(element);
@@ -122,9 +151,8 @@ function init() {
 
     effect = new THREE.StereoEffect(renderer);
 
-    scene = new THREE.Scene();
 
-    camera = new THREE.PerspectiveCamera(90, 1, 0.001, 6000);
+
     camera.position.set(0, 20, 0);
     scene.add(camera);
 
@@ -163,32 +191,23 @@ function init() {
     var amlight = new THREE.AmbientLight(0xffffff, 1);
     scene.add(amlight);
 
-
-    // plane
-    var texture = new THREE.TextureLoader().load(
-        'images/textures/patterns/checker.png'
-    );
-    texture.wrapS = THREE.RepeatWrapping;
-    texture.wrapT = THREE.RepeatWrapping;
-    texture.repeat = new THREE.Vector2(50, 50);
-    texture.anisotropy = renderer.getMaxAnisotropy();
+    //plane
     var material = new THREE.MeshPhongMaterial({
         color: 0x222222,
         specular: 0xffffff,
         shininess: 20,
         shading: THREE.FlatShading,
-        map: texture
+        map: planeTexture
     });
     var geometry = new THREE.PlaneGeometry(500, 500);
-    var mesh = new THREE.Mesh(geometry, material);
-    mesh.name = "plane";
+    var plane = new THREE.Mesh(geometry, material);
+    plane.name = "plane";
 
-    mesh.rotation.x = -Math.PI / 2;
-    mesh.position.y = -3;
-    intersectWithArr.push(mesh);
+    plane.rotation.x = -Math.PI / 2;
+    plane.position.y = -3;
+    intersectWithArr.push(plane);
 
-    scene.add(mesh);
-
+    scene.add(plane);
 
     scene.add(skyBox);
 
@@ -214,7 +233,7 @@ function init() {
 } //end init
 
 
-stareAtObject = false;
+staring = false;
 // Get Dropbox File Structure
 var dbx = new Dropbox({
     accessToken: 'teyD2v5ZoUAAAAAAAAAAFqFsogr2_RN1uKfRkBWwFUqEWvFckbwD4la50O6IbKu0'
@@ -237,27 +256,27 @@ dbx.filesListFolder({
 
 
                 if (!(pathArr[1] in organizedDB)) {
-                    console.log("creating first level!");
+                    // console.log("creating first level!");
                     organizedDB[pathArr[1]] = files[entry];
                 } else {
                     if (!(pathArr[2] in organizedDB[pathArr[1]])) {
-                        console.log("creating second level!");
+                        // console.log("creating second level!");
                         organizedDB[pathArr[1]][pathArr[2]] = files[entry];
                     } else {
                         if (!(pathArr[3] in organizedDB[pathArr[1]][pathArr[2]])) {
-                            console.log("creating third level!");
+                            // console.log("creating third level!");
                             organizedDB[pathArr[1]][pathArr[2]][pathArr[3]] = files[entry];
                         } else {
                             if (!(pathArr[4] in organizedDB[pathArr[1]][pathArr[2]][pathArr[3]])) {
-                                console.log("creating fourth level!");
+                                // console.log("creating fourth level!");
                                 organizedDB[pathArr[1]][pathArr[2]][pathArr[3]][pathArr[4]] = files[entry];
                             } else {
                                 if (!(pathArr[5] in organizedDB[pathArr[1]][pathArr[2]][pathArr[3]][pathArr[4]])) {
-                                    console.log("creating fifth level!");
+                                    // console.log("creating fifth level!");
                                     organizedDB[pathArr[1]][pathArr[2]][pathArr[3]][pathArr[4]][pathArr[5]] = files[entry];
                                 } else {
                                     if (!(pathArr[6] in organizedDB[pathArr[1]][pathArr[2]][pathArr[3]][pathArr[4]][pathArr[5]])) {
-                                        console.log("creating sixth level!");
+                                        // console.log("creating sixth level!");
                                         organizedDB[pathArr[1]][pathArr[2]][pathArr[3]][pathArr[4]][pathArr[5]][pathArr[6]] = files[entry];
                                     }
                                 }
@@ -297,15 +316,14 @@ dbx.filesListFolder({
     });
 
 function createFiles(response) {
-    console.log(response);
+
     var reslen = 0;
-    // for (i in response) {
-    //   console.log(i[".tag"]);
-    //     // if (i[".tag"] == "file" || i[".tag"] == "folder") {
-    //     //     reslen++;
-    //     // }
-    // }
-    console.log("reslen: " + reslen);
+    for (entry in response) {
+        if (response[entry] != null && typeof response[entry] === 'object') {
+            reslen++
+        }
+    }
+
     //circle vars
     var r = 80;
     var s = radians(0);
@@ -313,20 +331,28 @@ function createFiles(response) {
     var inc = radians(360 / reslen);
 
     for (entry in response) {
-        console.log(response[entry]);
+        if (response[entry] != null && typeof response[entry] === 'object') {
+            // console.log(response[entry]);
 
-        var xCord = r * Math.cos(s) * Math.sin(t);
-        var yCord = r * Math.sin(s) * Math.sin(t) + (floor * multiplier);
-        var zCord = r * Math.cos(t);
-        // console.log(xCord, yCord, zCord, r, s, t);
-        makeModel(xCord, yCord, zCord, response[entry]);
-        createText(xCord, yCord, zCord, response[entry]);
+            var xCord = r * Math.cos(s) * Math.sin(t);
+            var yCord = r * Math.sin(s) * Math.sin(t) + (floor * multiplier);
+            var zCord = r * Math.cos(t);
+            // console.log(xCord, yCord, zCord, r, s, t);
+            makeModel(xCord, yCord, zCord, response[entry]);
+            createText(xCord, yCord, zCord, response[entry]);
+            // console.log("created entry is:");
+            // console.log(response[entry]);
+        } else {
+            console.log("NOT counting" + response[entry] + "!");
+        }
         t -= inc;
+
         // s+= 20;
     }
+    // console.log("final number of objects created: " + reslen);
 
     function makeModel(xCord, yCord, zCord, entry) {
-        console.log(entry);
+        // console.log(entry);
         switch (entry[".tag"]) {
             case "folder":
                 colladaLoader.load('models/folder2.dae', function(colladaObj) {
@@ -341,28 +367,17 @@ function createFiles(response) {
                     // folder.path = response.entries[entry].path_lower;
                     folder.position.set(xCord, yCord, zCord);
 
-                    // folder.lookAt(camera);
+                    folder.lookAt(camera.position);
 
                     scene.add(folder);
                     files.push(folder);
                     intersectWithArr.push(folder);
-                    // console.log(folderContainer);
-
-                    // folderContainer[folderContainer.length - 1].push(folder);
-
-                    // console.log(folder);
-                    // tl.to(folder.position, 1, {
-                    //     y: yCord,
-                    //     timeScale: 6,
-                    //     ease: Quad.easeOut
-                    // }, 0.8);
                 });
                 break;
 
             case "file":
-
+console.log(entry);
                 var fullName = entry.path_lower.split('.');
-                console.log(fullName);
                 var filetype = fullName[fullName.length - 1].toLowerCase();
 
                 function chooseTexture(filetype) {
@@ -391,7 +406,6 @@ function createFiles(response) {
                         case "aiff":
                         case "m4a":
                         case "m4b":
-                            return
                             return fileIcons.music;
 
                         case "jpeg":
@@ -426,7 +440,7 @@ function createFiles(response) {
                 file.name = entry.name;
                 file.tier = floor;
                 file.type = filetype;
-                // file.lookAt(camera.position);
+                file.lookAt(camera);
 
                 scene.add(file);
                 files.push(file);
@@ -444,35 +458,45 @@ function createFiles(response) {
     }
     // create folder descriptions
     function createText(xCord, yCord, zCord, entry) {
+        // console.log(xCord, yCord, zCord);
+        // console.log(entry);
         var loader = new THREE.FontLoader();
+        var fontSize;
+        if (entry.name.length < 12) {
+            fontSize = 4;
+        } else if (entry.name.length < 16) {
+            fontSize = 3;
+        } else {
+            fontSize = 1;
+        }
+
         loader.load('fonts/helvetiker_regular.typeface.json', function(font) {
             var textGeo = new THREE.TextGeometry(entry.name, {
                 font: font,
-                size: 4,
-                height: 0.1,
+                size: fontSize,
+                height: 0.4,
                 curveSegments: 6,
                 bevelThickness: 1,
                 bevelSize: 0.1,
                 bevelEnabled: false
             });
             textGeo.computeBoundingBox();
-            var mesh = new THREE.Mesh(textGeo, new THREE.MeshPhongMaterial({
-                color: 0x000000,
-                specular: 0xffffff
+            var text = new THREE.Mesh(textGeo, new THREE.MeshPhongMaterial({
+                color: 0x000000
             }));
-            var xMiddle = mesh.geometry.boundingBox.max.x / 2;
+            var xMiddle = text.geometry.boundingBox.max.x / 2;
             textGeo.applyMatrix(new THREE.Matrix4().makeTranslation(xMiddle * -1, 0, 0));
-            mesh.position.set(xCord, yCord + 25, zCord);
-            mesh.tier = floor;
-            mesh.type = "text";
-            files.push(mesh);
-            mesh.lookAt(camera.position);
-            scene.add(mesh);
+            text.position.set(xCord, yCord + 25, zCord);
+            text.tier = floor;
+            text.type = "text";
+            files.push(text);
+            text.lookAt(camera.position);
+            scene.add(text);
             // folderContainer[folderContainer.length - 1].push(mesh);
         });
     } // End TextGeometry
 }
-// stareAtObject = true;
+// staring = true;
 
 // } // end getFiles
 
@@ -487,30 +511,29 @@ function rayCast() {
     // console.log(intersects.length);
 
     if (intersects.length == 0) {
-        stareAtObject = false;
+        staring = false;
         clearTimeout(stareTimeout);
-        rayCastSphere.animate = false;
+
         rayCastSphere.scale.set(1, 1, 1);
 
-        // console.log("staring at something? " + stareAtObject);
+        // console.log("staring at something? " + staring);
 
     } else if (intersects.length != 0 && intersects[0].object.name != "plane") {
         // console.log(intersects[0].object);
-        if (!stareAtObject) {
+        if (!staring) {
             if (intersects[0].object.parent != null) {
                 var object = intersects[0].object.parent;
             } else {
                 var object = intersects[0].object;
             }
             open(object);
-            // console.log("staring at something? " + stareAtObject);
+            // console.log("staring at something? " + staring);
         }
 
     } else if (intersects.length != 0 && intersects[0].object.name == "plane" && floor > 0) {
-        // stareAtObject = true;
-        // console.log("staring at something? " + stareAtObject);
-        if (!stareAtObject) {
-            rayCastSphere.animate = false;
+        // staring = true;
+        // console.log("staring at something? " + staring);
+        if (!staring) {
             rayCastSphere.scale.set(1, 1, 1);
             open();
         }
@@ -521,11 +544,11 @@ function rayCast() {
 function open(object) {
     // console.log("floor: " + floor);
     if (object != undefined) {
-        stareAtObject = true;
+        staring = true;
         console.log("staring at ");
         console.log(object.name);
+        staredObject = object;
 
-        rayCastSphere.animate = true;
 
         stareTimeout = setTimeout(function() {
             console.log("going up!");
@@ -542,9 +565,9 @@ function open(object) {
         }, 1500);
     } else {
 
-        stareAtObject = true;
+        staring = true;
         console.log("staring at floor");
-        rayCastSphere.animate = true;
+
 
         stareTimeout = setTimeout(function() {
             // remove file tier
@@ -568,7 +591,7 @@ function open(object) {
             console.log(PATH);
             PATH = PREVPATH;
             travel();
-            stareAtObject = false;
+            staring = false;
         }, 2000);
 
     }
@@ -596,19 +619,13 @@ function render(dt) {
 
 function animate(t) {
 
-    for (file in files) {
-        if (files[file].type == "folder") {
-            files[file].rotation.y += 0.01;
-        } else if (files[file].type != "text") {
-            files[file].rotation.y += 0.01;
-        }
-    }
-
-    if (rayCastSphere.animate) {
+    if (staring) {
+        staredObject.rotation.y += 0.01;
         rayCastSphere.scale.x += 0.03;
         rayCastSphere.scale.y += 0.03;
         rayCastSphere.scale.z += 0.03;
     }
+
 
 
     requestAnimationFrame(animate);
