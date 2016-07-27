@@ -33,6 +33,83 @@
 		"outputPathIsSetByUser": 0,
 		"processed": 0
 		},
+	"\/images\/filetypes\/document.png": {
+		"fileType": 32768,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 3719,
+		"inputAbbreviatedPath": "\/images\/filetypes\/document.png",
+		"outputAbbreviatedPath": "\/images\/filetypes\/document.png",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
+	"\/images\/filetypes\/file.png": {
+		"fileType": 32768,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 25886,
+		"inputAbbreviatedPath": "\/images\/filetypes\/file.png",
+		"outputAbbreviatedPath": "\/images\/filetypes\/file.png",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
+	"\/images\/filetypes\/html.png": {
+		"fileType": 32768,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 46041,
+		"inputAbbreviatedPath": "\/images\/filetypes\/html.png",
+		"outputAbbreviatedPath": "\/images\/filetypes\/html.png",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
+	"\/images\/filetypes\/image.png": {
+		"fileType": 32768,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 58368,
+		"inputAbbreviatedPath": "\/images\/filetypes\/image.png",
+		"outputAbbreviatedPath": "\/images\/filetypes\/image.png",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
+	"\/images\/filetypes\/music.png": {
+		"fileType": 32768,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 47831,
+		"inputAbbreviatedPath": "\/images\/filetypes\/music.png",
+		"outputAbbreviatedPath": "\/images\/filetypes\/music.png",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
+	"\/images\/filetypes\/pdf.png": {
+		"fileType": 32768,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 49009,
+		"inputAbbreviatedPath": "\/images\/filetypes\/pdf.png",
+		"outputAbbreviatedPath": "\/images\/filetypes\/pdf.png",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
+	"\/images\/filetypes\/zip.png": {
+		"fileType": 32768,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 18268,
+		"inputAbbreviatedPath": "\/images\/filetypes\/zip.png",
+		"outputAbbreviatedPath": "\/images\/filetypes\/zip.png",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
 	"\/images\/skybox\/0.png": {
 		"fileType": 32768,
 		"ignore": 0,

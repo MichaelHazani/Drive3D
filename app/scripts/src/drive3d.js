@@ -64,11 +64,11 @@ var circle = new ProgressBar.Circle('#progress', {
 
 var manager = new THREE.LoadingManager();
 manager.onProgress = function(item, loaded, total) {
-  var percent = loaded / total;
+    var percent = loaded / total;
     console.log(Math.round(percent * 100) + "%");
 
-circle.animate(percent)
-// document.getElementById("status").innerHTML = percent + "%";
+    circle.animate(percent)
+        // document.getElementById("status").innerHTML = percent + "%";
 }
 
 
@@ -252,42 +252,66 @@ dbx.filesListFolder({
 
             for (entry in files) {
 
-                var pathArr = files[entry].path_lower.split('/');
+                var file = files[entry];
+                // console.log(file);
 
+                var num = 1;
+                var newPath = organizedDB;
 
-                if (!(pathArr[1] in organizedDB)) {
-                    // console.log("creating first level!");
-                    organizedDB[pathArr[1]] = files[entry];
-                } else {
-                    if (!(pathArr[2] in organizedDB[pathArr[1]])) {
-                        // console.log("creating second level!");
-                        organizedDB[pathArr[1]][pathArr[2]] = files[entry];
+                var pathArrRaw = file.path_display.split('/');
+                var pathArr = pathArrRaw.slice(0, pathArrRaw.length);
+                recurThis(pathArr, newPath);
+
+                function recurThis(pathArr, oDB) {
+                    if (!(pathArr[num] in oDB)) {
+                        oDB[pathArr[num]] = file;
+
                     } else {
-                        if (!(pathArr[3] in organizedDB[pathArr[1]][pathArr[2]])) {
-                            // console.log("creating third level!");
-                            organizedDB[pathArr[1]][pathArr[2]][pathArr[3]] = files[entry];
-                        } else {
-                            if (!(pathArr[4] in organizedDB[pathArr[1]][pathArr[2]][pathArr[3]])) {
-                                // console.log("creating fourth level!");
-                                organizedDB[pathArr[1]][pathArr[2]][pathArr[3]][pathArr[4]] = files[entry];
-                            } else {
-                                if (!(pathArr[5] in organizedDB[pathArr[1]][pathArr[2]][pathArr[3]][pathArr[4]])) {
-                                    // console.log("creating fifth level!");
-                                    organizedDB[pathArr[1]][pathArr[2]][pathArr[3]][pathArr[4]][pathArr[5]] = files[entry];
-                                } else {
-                                    if (!(pathArr[6] in organizedDB[pathArr[1]][pathArr[2]][pathArr[3]][pathArr[4]][pathArr[5]])) {
-                                        // console.log("creating sixth level!");
-                                        organizedDB[pathArr[1]][pathArr[2]][pathArr[3]][pathArr[4]][pathArr[5]][pathArr[6]] = files[entry];
-                                    }
-                                }
-                            }
-                        }
+                        newPath = oDB[oDB[pathArr[num]].name];
+                        num++;
+                        recurThis(pathArr, newPath);
                     }
                 }
             }
-            // console.log(organizedDB.apps);
-        }
 
+            // for (entry in files) {
+
+            //     var pathArr = files[entry].path_lower.split('/');
+            //
+            //
+            //     if (!(pathArr[1] in organizedDB)) {
+            //         // console.log("creating first level!");
+            //         organizedDB[pathArr[1]] = files[entry];
+            //     } else {
+            //         if (!(pathArr[2] in organizedDB[pathArr[1]])) {
+            //             // console.log("creating second level!");
+            //             organizedDB[pathArr[1]][pathArr[2]] = files[entry];
+            //         } else {
+            //             if (!(pathArr[3] in organizedDB[pathArr[1]][pathArr[2]])) {
+            //                 // console.log("creating third level!");
+            //                 organizedDB[pathArr[1]][pathArr[2]][pathArr[3]] = files[entry];
+            //             } else {
+            //                 if (!(pathArr[4] in organizedDB[pathArr[1]][pathArr[2]][pathArr[3]])) {
+            //                     // console.log("creating fourth level!");
+            //                     organizedDB[pathArr[1]][pathArr[2]][pathArr[3]][pathArr[4]] = files[entry];
+            //                 } else {
+            //                     if (!(pathArr[5] in organizedDB[pathArr[1]][pathArr[2]][pathArr[3]][pathArr[4]])) {
+            //                         // console.log("creating fifth level!");
+            //                         organizedDB[pathArr[1]][pathArr[2]][pathArr[3]][pathArr[4]][pathArr[5]] = files[entry];
+            //                     } else {
+            //                         if (!(pathArr[6] in organizedDB[pathArr[1]][pathArr[2]][pathArr[3]][pathArr[4]][pathArr[5]])) {
+            //                             // console.log("creating sixth level!");
+            //                             organizedDB[pathArr[1]][pathArr[2]][pathArr[3]][pathArr[4]][pathArr[5]][pathArr[6]] = files[entry];
+            //                         }
+            //                     }
+            //                 }
+            //             }
+            //         }
+            //     }
+            // }
+            console.log(organizedDB);
+
+        }
 
     })
     .then(function() {
@@ -376,7 +400,7 @@ function createFiles(response) {
                 break;
 
             case "file":
-console.log(entry);
+                console.log(entry);
                 var fullName = entry.path_lower.split('.');
                 var filetype = fullName[fullName.length - 1].toLowerCase();
 
@@ -552,14 +576,13 @@ function open(object) {
 
         stareTimeout = setTimeout(function() {
             console.log("going up!");
-            var objName = object.name.toString().toLowerCase();
-            // console.log(PATH[object]);
+            var objName = object.name.toString();
             PREVPATH = PATH;
             PATH = PATH[objName];
             floor += 1;
 
             console.log("up! Path is: ")
-
+            console.log(PATH);
             createFiles(PATH);
             travel();
         }, 1500);
