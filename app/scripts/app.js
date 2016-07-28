@@ -12970,11 +12970,6 @@ dbx.filesListFolder({
 
     });
 
-// EMERGENCY TODO:
-// rotation
-// Sorting every floor
-
-
 // TODO: Sound feedback
 // TODO: Animation (fall from sky?)
 // TODO: Intro screen
@@ -12998,10 +12993,12 @@ var ray = new THREE.Vector2(0.0, 0.0);
 // Programmatic
 var organizedDB = {};
 var intersectWithArr = [];
+var response;
 // colladaLoader
 var colladaLoader = new THREE.ColladaLoader(manager);
 // colladaLoader.options.convertUpAxis = true;
-
+var path = '';
+var pathCollection = [];
 var rayCastSphere;
 var isPaused = false;
 var folder, files = [];
@@ -13011,8 +13008,7 @@ var staredObject;
 //allow for cleartimeout of stare function
 var stareTimeout;
 // current file path
-var PATH = '',
-    PREVPATH;
+var PATH = [];
 
 //floor = hierarchy level (From the bottom);
 var floor = 0;
@@ -13198,20 +13194,16 @@ function init() {
     camera.add(rayCastSphere);
 
 
-    //GO
-    // getFiles(PATH);
-
-
 } //end init
 
 
-staring = false;
+// staring = false;
 // Get Dropbox File Structure
 var dbx = new Dropbox({
     accessToken: 'teyD2v5ZoUAAAAAAAAAAFqFsogr2_RN1uKfRkBWwFUqEWvFckbwD4la50O6IbKu0'
 });
 dbx.filesListFolder({
-        path: PATH,
+        path: '',
         recursive: true
     })
     .then(function(response) {
@@ -13245,52 +13237,13 @@ dbx.filesListFolder({
                     }
                 }
             }
-
-            // for (entry in files) {
-
-            //     var pathArr = files[entry].path_lower.split('/');
-            //
-            //
-            //     if (!(pathArr[1] in organizedDB)) {
-            //         // console.log("creating first level!");
-            //         organizedDB[pathArr[1]] = files[entry];
-            //     } else {
-            //         if (!(pathArr[2] in organizedDB[pathArr[1]])) {
-            //             // console.log("creating second level!");
-            //             organizedDB[pathArr[1]][pathArr[2]] = files[entry];
-            //         } else {
-            //             if (!(pathArr[3] in organizedDB[pathArr[1]][pathArr[2]])) {
-            //                 // console.log("creating third level!");
-            //                 organizedDB[pathArr[1]][pathArr[2]][pathArr[3]] = files[entry];
-            //             } else {
-            //                 if (!(pathArr[4] in organizedDB[pathArr[1]][pathArr[2]][pathArr[3]])) {
-            //                     // console.log("creating fourth level!");
-            //                     organizedDB[pathArr[1]][pathArr[2]][pathArr[3]][pathArr[4]] = files[entry];
-            //                 } else {
-            //                     if (!(pathArr[5] in organizedDB[pathArr[1]][pathArr[2]][pathArr[3]][pathArr[4]])) {
-            //                         // console.log("creating fifth level!");
-            //                         organizedDB[pathArr[1]][pathArr[2]][pathArr[3]][pathArr[4]][pathArr[5]] = files[entry];
-            //                     } else {
-            //                         if (!(pathArr[6] in organizedDB[pathArr[1]][pathArr[2]][pathArr[3]][pathArr[4]][pathArr[5]])) {
-            //                             // console.log("creating sixth level!");
-            //                             organizedDB[pathArr[1]][pathArr[2]][pathArr[3]][pathArr[4]][pathArr[5]][pathArr[6]] = files[entry];
-            //                         }
-            //                     }
-            //                 }
-            //             }
-            //         }
-            //     }
-            // }
             console.log(organizedDB);
 
         }
 
     })
     .then(function() {
-        // travel();
-        PREVPATH = PATH;
-        PATH = organizedDB;
-        createFiles(PATH);
+        createFiles([]);
     })
     .catch(function(error) {
         console.log("restarting, error: ");
@@ -13298,7 +13251,7 @@ dbx.filesListFolder({
 
         var restart = new Promise(function() {
             // if error, delete all and init all
-            PATH = '';
+            // PATH = '';
             floor = 0;
             // var count = 0;
             // console.log(folderContainer[folder]);
@@ -13311,11 +13264,28 @@ dbx.filesListFolder({
 
     });
 
-function createFiles(response) {
+function createFiles(objName) {
+
+    if (!(objName.length > 0)) {
+        path = organizedDB;
+        pathCollection = [];
+    } else {
+        // commonPath.push(objName);
+        path = path[objName];
+        pathCollection.push(path);
+        console.log("updated pathCol: ");
+        console.log(pathCollection);
+        // console.log("last item in commonPath:");
+        // console.log(commonPath[commonPath.length-1]);
+        // console.log("commonPath: ")
+        // console.log(commonPath);
+    }
+
+
 
     var reslen = 0;
-    for (entry in response) {
-        if (response[entry] != null && typeof response[entry] === 'object') {
+    for (entry in path) {
+        if (path[entry] != null && typeof path[entry] === 'object') {
             reslen++
         }
     }
@@ -13326,20 +13296,20 @@ function createFiles(response) {
     var t = radians(50);
     var inc = radians(360 / reslen);
 
-    for (entry in response) {
-        if (response[entry] != null && typeof response[entry] === 'object') {
-            // console.log(response[entry]);
+    for (entry in path) {
+        if (path[entry] != null && typeof path[entry] === 'object') {
+            // console.log(path[entry]);
 
             var xCord = r * Math.cos(s) * Math.sin(t);
             var yCord = r * Math.sin(s) * Math.sin(t) + (floor * multiplier);
             var zCord = r * Math.cos(t);
             // console.log(xCord, yCord, zCord, r, s, t);
-            makeModel(xCord, yCord, zCord, response[entry]);
-            createText(xCord, yCord, zCord, response[entry]);
+            makeModel(xCord, yCord, zCord, path[entry]);
+            createText(xCord, yCord, zCord, path[entry]);
             // console.log("created entry is:");
-            // console.log(response[entry]);
+            // console.log(path[entry]);
         } else {
-            console.log("NOT counting" + response[entry] + "!");
+            console.log("NOT counting" + path[entry] + "!");
         }
         t -= inc;
 
@@ -13360,10 +13330,10 @@ function createFiles(response) {
                     folder.type = "folder";
                     folder.tier = floor;
 
-                    // folder.path = response.entries[entry].path_lower;
+                    // folder.path = path.entries[entry].path_lower;
                     folder.position.set(xCord, yCord, zCord);
 
-                    folder.lookAt(camera.position);
+                    folder.lookAt(new THREE.Vector3(0, yCord, 0));
 
                     scene.add(folder);
                     files.push(folder);
@@ -13436,7 +13406,7 @@ function createFiles(response) {
                 file.name = entry.name;
                 file.tier = floor;
                 file.type = filetype;
-                file.lookAt(camera);
+                file.lookAt(new THREE.Vector3(0, yCord, 0));
 
                 scene.add(file);
                 files.push(file);
@@ -13463,7 +13433,7 @@ function createFiles(response) {
         } else if (entry.name.length < 16) {
             fontSize = 3;
         } else {
-            fontSize = 1;
+            fontSize = 2;
         }
 
         loader.load('fonts/helvetiker_regular.typeface.json', function(font) {
@@ -13486,13 +13456,12 @@ function createFiles(response) {
             text.tier = floor;
             text.type = "text";
             files.push(text);
-            text.lookAt(camera.position);
+            text.lookAt(new THREE.Vector3(0, yCord, 0));
             scene.add(text);
             // folderContainer[folderContainer.length - 1].push(mesh);
         });
     } // End TextGeometry
 }
-// staring = true;
 
 // } // end getFiles
 
@@ -13538,7 +13507,6 @@ function rayCast() {
 }
 
 function open(object) {
-    // console.log("floor: " + floor);
     if (object != undefined) {
         staring = true;
         console.log("staring at ");
@@ -13549,13 +13517,12 @@ function open(object) {
         stareTimeout = setTimeout(function() {
             console.log("going up!");
             var objName = object.name.toString();
-            PREVPATH = PATH;
-            PATH = PATH[objName];
+
             floor += 1;
 
             console.log("up! Path is: ")
-            console.log(PATH);
-            createFiles(PATH);
+            console.log(objName);
+            createFiles(objName);
             travel();
         }, 1500);
     } else {
@@ -13572,29 +13539,30 @@ function open(object) {
                     scene.remove(files[item]);
                 }
             }
-            // folderContainer.pop();
-
-            //to avoid root="" situations
-            // if (PATH.indexOf('/') != -1) {
-            //     var newPath = PATH.split('/');
-            //     newPath.pop();
-            //     newPath.pop();
-            //     PATH = newPath;
-            // }
 
             floor -= 1;
-            console.log(PATH);
-            PATH = PREVPATH;
+
+            console.log("Current Path collection: ");
+            console.log(pathCollection);
+            //
+            console.log("reducing");
+            pathCollection.pop();
+            console.log("post reduction");
+            console.log(pathCollection);
+            if (pathCollection.length > 0){
+            path = pathCollection[pathCollection.length-1];
+          } else {
+            path = organizedDB;
+          }
+            console.log("path is");
+            console.log(path);
             travel();
             staring = false;
         }, 2000);
 
     }
 }
-
-
 function travel() {
-    // controls.target.set(0, floor * multiplier, 0);
     tl.to(camera.position, 1, {
         y: floor * multiplier,
         ease: Quad.easeOut
