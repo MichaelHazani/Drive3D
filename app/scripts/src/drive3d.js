@@ -3,7 +3,9 @@
 // TODO: Intro screen
 // TODO: finish file case switches
 // TODO: Preview images
-// TODO: Loader
+// TODO: Admin Panel (fonts, etc.)
+// TODO: fix color issue
+
 
 // Boilerplate
 var camera = new THREE.PerspectiveCamera(90, 1, 0.001, 6000),
@@ -33,6 +35,12 @@ var folder, files = [];
 var folderContainer = [];
 var staring = false;
 var staredObject;
+var fonts = {"Data Control": 'fonts/Data Control_Latin.json',
+"Helvetiker": 'fonts/helvetiker_regular.typeface.json'
+}
+//for later admin panel
+var chosenFont = fonts["Data Control"];
+
 //allow for cleartimeout of stare function
 var stareTimeout;
 // current file path
@@ -41,7 +49,7 @@ var PATH = [];
 //floor = hierarchy level (From the bottom);
 var floor = 0;
 //how high to go
-var multiplier = 130;
+var multiplier = 230;
 
 var tl = new TimelineLite();
 
@@ -212,6 +220,100 @@ function init() {
     setTimeout(resize, 1);
 
 
+// corner pillars
+var pillarBallGeo = new THREE.SphereGeometry(10,12,30);
+// var pillarBallMat = new THREE.MeshPhongMaterial();
+var pillarBallMat = new THREE.MeshPhongMaterial({
+    color: 0x333333,
+    specular: 0x333333,
+    transparent: true
+    // shading: THREE.FlatShading
+});
+var ballCount = 20;
+var pillarBalls = [];
+var numArr = [];
+
+for (var i = 0; i < ballCount; i++) {
+makePillarBall(100,100, i);
+makePillarBall(100,-100, i);
+makePillarBall(-100,100, i);
+makePillarBall(-100,-100, i);
+
+}
+function makePillarBall(x,z,color) {
+  var pillarBall = new THREE.Mesh(pillarBallGeo, pillarBallMat);
+  pillarBall.position.set(x, 20 + i * multiplier / 5, z);
+  pillarBall.material.color = new THREE.Color("hsl(" + i + ", 100%, 50%)");
+  pillarBall.material.opacity = 0.5;
+  scene.add(pillarBall);
+  pillarBalls.push(pillarBall);
+}
+
+
+// console.log(pillarBalls);
+//Matrix
+// var matrixMaterial = new THREE.LineBasicMaterial({
+//         color: 0x009900
+//     });
+//
+// var matrixMult = 200;
+// for (var i = 0; i < 18; i++) {
+//
+//   var matrixGeometry = new THREE.Geometry();
+//     matrixGeometry.vertices.push(new THREE.Vector3(-matrixMult + i * 40, -100, -matrixMult));
+//     matrixGeometry.vertices.push(new THREE.Vector3(-matrixMult + i * 40, 5000, -matrixMult));
+// var matrixWall = new THREE.Line(matrixGeometry, matrixMaterial);
+// scene.add(matrixWall);
+//
+// var matrixGeometry2 = new THREE.Geometry();
+//   matrixGeometry2.vertices.push(new THREE.Vector3(matrixMult, -100, -matrixMult + i * 40));
+//   matrixGeometry2.vertices.push(new THREE.Vector3(matrixMult, 5000, -matrixMult + i * 40));
+// var matrixWall2 = new THREE.Line(matrixGeometry2, matrixMaterial);
+// scene.add(matrixWall2);
+//
+// var matrixGeometry3 = new THREE.Geometry();
+//   matrixGeometry3.vertices.push(new THREE.Vector3(-matrixMult, -100, -matrixMult+ i * 40));
+//   matrixGeometry3.vertices.push(new THREE.Vector3(-matrixMult, 5000, -matrixMult+ i * 40));
+// var matrixWall3 = new THREE.Line(matrixGeometry3, matrixMaterial);
+// scene.add(matrixWall3);
+// //
+// var matrixGeometry4 = new THREE.Geometry();
+//   matrixGeometry4.vertices.push(new THREE.Vector3(-matrixMult + i * 40, -100, matrixMult));
+//   matrixGeometry4.vertices.push(new THREE.Vector3(-matrixMult + i * 40, 5000, matrixMult));
+// var matrixWall4 = new THREE.Line(matrixGeometry4, matrixMaterial);
+// scene.add(matrixWall4);
+//
+// }
+//
+// for (var i = 0; i < 200; i++) {
+//   var matrixGeometry = new THREE.Geometry();
+//     matrixGeometry.vertices.push(new THREE.Vector3(-matrixMult, 30 + i * 40, -matrixMult));
+//     matrixGeometry.vertices.push(new THREE.Vector3(matrixMult, 30 + i * 40, -matrixMult));
+// var matrixWall = new THREE.Line(matrixGeometry, matrixMaterial);
+// scene.add(matrixWall);
+//
+// var matrixGeometry2 = new THREE.Geometry();
+//   matrixGeometry2.vertices.push(new THREE.Vector3(-matrixMult, 30 + i * 40, matrixMult));
+//   matrixGeometry2.vertices.push(new THREE.Vector3(matrixMult, 30 + i * 40, matrixMult));
+// var matrixWall2 = new THREE.Line(matrixGeometry2, matrixMaterial);
+// scene.add(matrixWall2);
+//
+// var matrixGeometry3 = new THREE.Geometry();
+//   matrixGeometry3.vertices.push(new THREE.Vector3(matrixMult, 30 + i * 40, -matrixMult));
+//   matrixGeometry3.vertices.push(new THREE.Vector3(matrixMult, 30 + i * 40, matrixMult));
+// var matrixWall3 = new THREE.Line(matrixGeometry3, matrixMaterial);
+// scene.add(matrixWall3);
+// // //
+// var matrixGeometry4 = new THREE.Geometry();
+//   matrixGeometry4.vertices.push(new THREE.Vector3(-matrixMult, 30 + i * 40, -matrixMult));
+//   matrixGeometry4.vertices.push(new THREE.Vector3(-matrixMult, 30 + i * 40, matrixMult));
+// var matrixWall4 = new THREE.Line(matrixGeometry4, matrixMaterial);
+// scene.add(matrixWall4);
+//
+// }
+
+
+
     //helper raycast ball
     var sphereGeo = new THREE.SphereGeometry(1, 12, 30);
     sphereGeo.dynamic = true;
@@ -230,6 +332,7 @@ function init() {
 var dbx = new Dropbox({
     accessToken: 'teyD2v5ZoUAAAAAAAAAAFqFsogr2_RN1uKfRkBWwFUqEWvFckbwD4la50O6IbKu0'
 });
+console.log(dbx);
 dbx.filesListFolder({
         path: '',
         recursive: true
@@ -265,7 +368,7 @@ dbx.filesListFolder({
                     }
                 }
             }
-            console.log(organizedDB);
+            // console.log(organizedDB);
 
         }
 
@@ -301,8 +404,8 @@ function createFiles(objName) {
         // commonPath.push(objName);
         path = path[objName];
         pathCollection.push(path);
-        console.log("updated pathCol: ");
-        console.log(pathCollection);
+        // console.log("updated pathCol: ");
+        // console.log(pathCollection);
         // console.log("last item in commonPath:");
         // console.log(commonPath[commonPath.length-1]);
         // console.log("commonPath: ")
@@ -336,8 +439,8 @@ function createFiles(objName) {
             createText(xCord, yCord, zCord, path[entry]);
             // console.log("created entry is:");
             // console.log(path[entry]);
-        } else {
-            console.log("NOT counting" + path[entry] + "!");
+        // } else {
+        //     console.log("NOT counting" + path[entry] + "!");
         }
         t -= inc;
 
@@ -370,7 +473,7 @@ function createFiles(objName) {
                 break;
 
             case "file":
-                console.log(entry);
+                // console.log(entry);
                 var fullName = entry.path_lower.split('.');
                 var filetype = fullName[fullName.length - 1].toLowerCase();
 
@@ -408,7 +511,7 @@ function createFiles(objName) {
                         case "bmp":
                         case "png":
                         case "tiff":
-                            // console.log(entry);
+                            console.log(entry);
                             return fileIcons.image;
                             // return fileIcons.fileImage(filePath);
 
@@ -464,7 +567,7 @@ function createFiles(objName) {
             fontSize = 2;
         }
 
-        loader.load('fonts/helvetiker_regular.typeface.json', function(font) {
+        loader.load(chosenFont, function(font) {
             var textGeo = new THREE.TextGeometry(entry.name, {
                 font: font,
                 size: fontSize,
@@ -474,6 +577,7 @@ function createFiles(objName) {
                 bevelSize: 0.1,
                 bevelEnabled: false
             });
+
             textGeo.computeBoundingBox();
             var text = new THREE.Mesh(textGeo, new THREE.MeshPhongMaterial({
                 color: 0x000000
@@ -537,26 +641,26 @@ function rayCast() {
 function open(object) {
     if (object != undefined) {
         staring = true;
-        console.log("staring at ");
-        console.log(object.name);
+        // console.log("staring at ");
+        // console.log(object.name);
         staredObject = object;
 
 
         stareTimeout = setTimeout(function() {
-            console.log("going up!");
+            // console.log("going up!");
             var objName = object.name.toString();
 
             floor += 1;
 
-            console.log("up! Path is: ")
-            console.log(objName);
+            // console.log("up! Path is: ")
+            // console.log(objName);
             createFiles(objName);
             travel();
-        }, 1500);
+        }, 1000);
     } else {
 
         staring = true;
-        console.log("staring at floor");
+        // console.log("staring at floor");
 
 
         stareTimeout = setTimeout(function() {
@@ -570,23 +674,23 @@ function open(object) {
 
             floor -= 1;
 
-            console.log("Current Path collection: ");
-            console.log(pathCollection);
+            // console.log("Current Path collection: ");
+            // console.log(pathCollection);
             //
-            console.log("reducing");
+            // console.log("reducing");
             pathCollection.pop();
-            console.log("post reduction");
-            console.log(pathCollection);
+            // console.log("post reduction");
+            // console.log(pathCollection);
             if (pathCollection.length > 0){
             path = pathCollection[pathCollection.length-1];
           } else {
             path = organizedDB;
           }
-            console.log("path is");
-            console.log(path);
+            // console.log("path is");
+            // console.log(path);
             travel();
             staring = false;
-        }, 2000);
+        }, 1000);
 
     }
 }
