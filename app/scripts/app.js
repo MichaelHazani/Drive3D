@@ -12971,7 +12971,6 @@ dbx.filesListFolder({
     });
 
 // TODO: Sound feedback
-// TODO: Animation (fall from sky?)
 // TODO: Intro screen
 // TODO: finish file case switches
 // TODO: Preview images
@@ -13007,10 +13006,11 @@ var folder, files = [];
 var folderContainer = [];
 var staring = false;
 var staredObject;
-var fonts = {"Data Control": 'fonts/Data Control_Latin.json',
-"Helvetiker": 'fonts/helvetiker_regular.typeface.json'
-}
-//for later admin panel
+var fonts = {
+        "Data Control": 'fonts/Data Control_Latin.json',
+        "Helvetiker": 'fonts/helvetiker_regular.typeface.json'
+    }
+    //for later admin panel
 var chosenFont = fonts["Data Control"];
 
 //allow for cleartimeout of stare function
@@ -13192,97 +13192,39 @@ function init() {
     setTimeout(resize, 1);
 
 
-// corner pillars
-var pillarBallGeo = new THREE.SphereGeometry(10,12,30);
-// var pillarBallMat = new THREE.MeshPhongMaterial();
-var pillarBallMat = new THREE.MeshPhongMaterial({
-    color: 0x333333,
-    specular: 0x333333,
-    transparent: true
-    // shading: THREE.FlatShading
-});
-var ballCount = 20;
-var pillarBalls = [];
-var numArr = [];
+    // corner pillars
+    var pillarBallGeo = new THREE.SphereGeometry(10, 12, 30);
+    // var pillarBallMat = new THREE.MeshPhongMaterial();
+    var pillarBallMat = new THREE.MeshPhongMaterial({
+        color: 0x333333,
+        specular: 0x333333,
+        transparent: true
+            // shading: THREE.FlatShading
+    });
 
-for (var i = 0; i < ballCount; i++) {
-makePillarBall(100,100, i);
-makePillarBall(100,-100, i);
-makePillarBall(-100,100, i);
-makePillarBall(-100,-100, i);
+    var ballCount = 200;
+    var iArr = [];
+    var pillarBallArr = [];
+    var r = 100;
+    var s = radians(20);
+    var t = radians(40);
+    var inc = radians(360 / 20);
 
-}
-function makePillarBall(x,z,color) {
-  var pillarBall = new THREE.Mesh(pillarBallGeo, pillarBallMat);
-  pillarBall.position.set(x, 20 + i * multiplier / 5, z);
-  pillarBall.material.color = new THREE.Color("hsl(" + i + ", 100%, 50%)");
-  pillarBall.material.opacity = 0.5;
-  scene.add(pillarBall);
-  pillarBalls.push(pillarBall);
-}
+    for (var i = 0; i < ballCount; i++) {
+        var xCord = r * Math.cos(s) * Math.sin(t);
+        var yCord = r * Math.sin(s) * Math.sin(t) + (floor * multiplier);
+        var zCord = r * Math.cos(t);
 
+        var pillarBallGeo = new THREE.SphereGeometry(3, 12, 30);
+        var pillarBall = new THREE.Mesh(pillarBallGeo, pillarBallMat);
+        pillarBall.position.set(xCord, yCord + i * 4, zCord);
+        iArr[i] = i;
 
-// console.log(pillarBalls);
-//Matrix
-// var matrixMaterial = new THREE.LineBasicMaterial({
-//         color: 0x009900
-//     });
-//
-// var matrixMult = 200;
-// for (var i = 0; i < 18; i++) {
-//
-//   var matrixGeometry = new THREE.Geometry();
-//     matrixGeometry.vertices.push(new THREE.Vector3(-matrixMult + i * 40, -100, -matrixMult));
-//     matrixGeometry.vertices.push(new THREE.Vector3(-matrixMult + i * 40, 5000, -matrixMult));
-// var matrixWall = new THREE.Line(matrixGeometry, matrixMaterial);
-// scene.add(matrixWall);
-//
-// var matrixGeometry2 = new THREE.Geometry();
-//   matrixGeometry2.vertices.push(new THREE.Vector3(matrixMult, -100, -matrixMult + i * 40));
-//   matrixGeometry2.vertices.push(new THREE.Vector3(matrixMult, 5000, -matrixMult + i * 40));
-// var matrixWall2 = new THREE.Line(matrixGeometry2, matrixMaterial);
-// scene.add(matrixWall2);
-//
-// var matrixGeometry3 = new THREE.Geometry();
-//   matrixGeometry3.vertices.push(new THREE.Vector3(-matrixMult, -100, -matrixMult+ i * 40));
-//   matrixGeometry3.vertices.push(new THREE.Vector3(-matrixMult, 5000, -matrixMult+ i * 40));
-// var matrixWall3 = new THREE.Line(matrixGeometry3, matrixMaterial);
-// scene.add(matrixWall3);
-// //
-// var matrixGeometry4 = new THREE.Geometry();
-//   matrixGeometry4.vertices.push(new THREE.Vector3(-matrixMult + i * 40, -100, matrixMult));
-//   matrixGeometry4.vertices.push(new THREE.Vector3(-matrixMult + i * 40, 5000, matrixMult));
-// var matrixWall4 = new THREE.Line(matrixGeometry4, matrixMaterial);
-// scene.add(matrixWall4);
-//
-// }
-//
-// for (var i = 0; i < 200; i++) {
-//   var matrixGeometry = new THREE.Geometry();
-//     matrixGeometry.vertices.push(new THREE.Vector3(-matrixMult, 30 + i * 40, -matrixMult));
-//     matrixGeometry.vertices.push(new THREE.Vector3(matrixMult, 30 + i * 40, -matrixMult));
-// var matrixWall = new THREE.Line(matrixGeometry, matrixMaterial);
-// scene.add(matrixWall);
-//
-// var matrixGeometry2 = new THREE.Geometry();
-//   matrixGeometry2.vertices.push(new THREE.Vector3(-matrixMult, 30 + i * 40, matrixMult));
-//   matrixGeometry2.vertices.push(new THREE.Vector3(matrixMult, 30 + i * 40, matrixMult));
-// var matrixWall2 = new THREE.Line(matrixGeometry2, matrixMaterial);
-// scene.add(matrixWall2);
-//
-// var matrixGeometry3 = new THREE.Geometry();
-//   matrixGeometry3.vertices.push(new THREE.Vector3(matrixMult, 30 + i * 40, -matrixMult));
-//   matrixGeometry3.vertices.push(new THREE.Vector3(matrixMult, 30 + i * 40, matrixMult));
-// var matrixWall3 = new THREE.Line(matrixGeometry3, matrixMaterial);
-// scene.add(matrixWall3);
-// // //
-// var matrixGeometry4 = new THREE.Geometry();
-//   matrixGeometry4.vertices.push(new THREE.Vector3(-matrixMult, 30 + i * 40, -matrixMult));
-//   matrixGeometry4.vertices.push(new THREE.Vector3(-matrixMult, 30 + i * 40, matrixMult));
-// var matrixWall4 = new THREE.Line(matrixGeometry4, matrixMaterial);
-// scene.add(matrixWall4);
-//
-// }
+        pillarBall.material.opacity = 0.5;
+        scene.add(pillarBall);
+        pillarBallArr.push(pillarBall);
+        t -= inc;
+    }
 
 
 
@@ -13411,8 +13353,8 @@ function createFiles(objName) {
             createText(xCord, yCord, zCord, path[entry]);
             // console.log("created entry is:");
             // console.log(path[entry]);
-        // } else {
-        //     console.log("NOT counting" + path[entry] + "!");
+            // } else {
+            //     console.log("NOT counting" + path[entry] + "!");
         }
         t -= inc;
 
@@ -13653,11 +13595,11 @@ function open(object) {
             pathCollection.pop();
             // console.log("post reduction");
             // console.log(pathCollection);
-            if (pathCollection.length > 0){
-            path = pathCollection[pathCollection.length-1];
-          } else {
-            path = organizedDB;
-          }
+            if (pathCollection.length > 0) {
+                path = pathCollection[pathCollection.length - 1];
+            } else {
+                path = organizedDB;
+            }
             // console.log("path is");
             // console.log(path);
             travel();
@@ -13666,6 +13608,7 @@ function open(object) {
 
     }
 }
+
 function travel() {
     tl.to(camera.position, 1, {
         y: floor * multiplier,
