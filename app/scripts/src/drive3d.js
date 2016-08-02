@@ -4,7 +4,7 @@
 // TODO: Preview images
 // TODO: Admin Panel (fonts, etc.)
 // TODO: fix color issue
-
+// TODO: Authentication
 
 // Boilerplate
 var camera = new THREE.PerspectiveCamera(90, 1, 0.001, 6000),
@@ -20,7 +20,10 @@ var ray = new THREE.Vector2(0.0, 0.0);
 
 
 // Programmatic
+var manager;
+var CLIENT_ID = '8dyy3xs0p8c97t2';
 var organizedDB = {};
+var rawDB = [];
 var intersectWithArr = [];
 var response;
 // colladaLoader
@@ -57,6 +60,138 @@ var tl = new TimelineLite();
 
 // --------------------------------------------------------------------------------PRELOADERS-----------------------------------------------------
 
+function isAuthenticated() {
+
+    return !!getAccessTokenFromUrl();
+}
+
+//get access token
+function getAccessTokenFromUrl() {
+    return utils.parseQueryString(window.location.hash).access_token;
+}
+
+// Get Dropbox File Structure
+if (!(isAuthenticated())) {
+    console.log(!!isAuthenticated());
+    console.log("auth needed!");
+    var dbx = new Dropbox({
+        clientId: CLIENT_ID
+    });
+    var authUrl = dbx.getAuthenticationUrl('http://localhost:3000/');
+    document.getElementById('authlink').href = authUrl;
+
+} else {
+    console.log("Authenticated!");
+    $("#authlink").remove();
+    manager = new THREE.LoadingManager();
+    manager.onProgress = function(item, loaded, total) {
+        var percent = loaded / total;
+        console.log(Math.round(percent * 100) + "%");
+
+        circle.animate(percent)
+            // document.getElementById("status").innerHTML = percent + "%";
+    }
+
+
+
+    manager.onLoad = function() {
+        // console.log("ready to go!");
+        $('#progress').remove();
+        init();
+        animate();
+    }
+}
+var dbx = new Dropbox({
+    // accessToken: 'teyD2v5ZoUAAAAAAAAAAHVD4sI59CTrcznwVz_9YeiQzH_mN1Xr0S5szatZqTyaB'
+    accessToken: getAccessTokenFromUrl()
+});
+
+dbx.filesListFolder({
+        path: '',
+        recursive: true
+    })
+    .then(function(response) {
+        populateRawDB(response);
+
+        function populateRawDB(response) {
+            for (entry in response.entries) {
+                rawDB.push(response.entries[entry]);
+            }
+
+            if (response.has_more && rawDB.length < 10000) {
+                // console.log(response);
+                console.log("has more!");
+                dbx.filesListFolderContinue({
+                    cursor: response.cursor
+                }).then(function(response) {
+                  populateRawDB(response);
+                  console.log("added to RawDB!");
+                  console.log("RawDB entries num: " + rawDB.length);
+                  console.log("last entry: ");
+                  console.log(rawDB[rawDB.length-1]);
+                });
+            } else {
+              turnToDb(rawDB);
+            }
+        }
+
+
+        function turnToDb(files) {
+          console.log("Building to DB....");
+            for (entry in files) {
+              console.log("files left: " + (files.length - entry))
+
+                var file = files[entry];
+                // console.log(file);
+
+                var num = 1;
+                var newPath = organizedDB;
+
+                var pathArrRaw = file.path_display.split('/');
+                var pathArr = pathArrRaw.slice(0, pathArrRaw.length);
+                recurThis(pathArr, newPath);
+
+                function recurThis(pathArr, oDB) {
+                    if (!(pathArr[num] in oDB)) {
+                        oDB[pathArr[num]] = file;
+                        console.log("file created!");
+
+                    } else {
+                        newPath = oDB[oDB[pathArr[num]].name];
+                        num++;
+                        console.log("file exists, going deeper");
+                        recurThis(pathArr, newPath);
+                    }
+                }
+
+                // console.log ("processed file number " + entry + " out of " + files.length);
+            }
+            // console.log(organizedDB);
+
+        }
+
+    })
+    .then(function() {
+        createFiles([]);
+    })
+    .catch(function(error) {
+        console.log("restarting, error: ");
+        console.log(error);
+
+        var restart = new Promise(function() {
+            // if error, delete all and init all
+            // PATH = '';
+            floor = 0;
+            // var count = 0;
+            // console.log(folderContainer[folder]);
+            for (item in files) {
+                scene.remove(item);
+            }
+            files = [];
+        });
+        // restart.then(getFiles(PATH));
+
+    });
 
 var circle = new ProgressBar.Circle('#progress', {
     color: '#8A2BE2',
@@ -66,23 +201,8 @@ var circle = new ProgressBar.Circle('#progress', {
     easing: 'easeInOut'
 });
 
-var manager = new THREE.LoadingManager();
-manager.onProgress = function(item, loaded, total) {
-    var percent = loaded / total;
-    console.log(Math.round(percent * 100) + "%");
-
-    circle.animate(percent)
-        // document.getElementById("status").innerHTML = percent + "%";
-}
 
 
-
-manager.onLoad = function() {
-    // console.log("ready to go!");
-    $('#progress').remove();
-    init();
-    animate();
-}
 
 // Skybox
 var imagePrefix = "images/skybox/new2/";
@@ -270,72 +390,7 @@ function init() {
 
 
 // staring = false;
-// Get Dropbox File Structure
-var dbx = new Dropbox({
-    accessToken: 'teyD2v5ZoUAAAAAAAAAAFqFsogr2_RN1uKfRkBWwFUqEWvFckbwD4la50O6IbKu0'
-});
-console.log(dbx);
-dbx.filesListFolder({
-        path: '',
-        recursive: true
-    })
-    .then(function(response) {
-        // localStorage.setObject('DBFileStructure', response);
-        // (localStorage.getObject('DBFileStructure'));
-        var files = response.entries;
-        turnToDb(files);
 
-        function turnToDb(files) {
-
-            for (entry in files) {
-
-                var file = files[entry];
-                // console.log(file);
-
-                var num = 1;
-                var newPath = organizedDB;
-
-                var pathArrRaw = file.path_display.split('/');
-                var pathArr = pathArrRaw.slice(0, pathArrRaw.length);
-                recurThis(pathArr, newPath);
-
-                function recurThis(pathArr, oDB) {
-                    if (!(pathArr[num] in oDB)) {
-                        oDB[pathArr[num]] = file;
-
-                    } else {
-                        newPath = oDB[oDB[pathArr[num]].name];
-                        num++;
-                        recurThis(pathArr, newPath);
-                    }
-                }
-            }
-            // console.log(organizedDB);
-
-        }
-
-    })
-    .then(function() {
-        createFiles([]);
-    })
-    .catch(function(error) {
-        console.log("restarting, error: ");
-        console.log(error);
-
-        var restart = new Promise(function() {
-            // if error, delete all and init all
-            // PATH = '';
-            floor = 0;
-            // var count = 0;
-            // console.log(folderContainer[folder]);
-            for (item in files) {
-                scene.remove(item);
-            }
-            files = [];
-        });
-        // restart.then(getFiles(PATH));
-
-    });
 
 function createFiles(objName) {
 
@@ -675,20 +730,13 @@ function animate(t) {
 
 // --------------------------------------------------------------------------------HELPERS------------------------------------------------------------
 
+
 //convert degrees to radians
 function radians(degree) {
     return degree * Math.PI / 180;
 }
 
-//Storage getters/setters
 
-Storage.prototype.setObject = function(key, value) {
-    this.setItem(key, JSON.stringify(value));
-};
-Storage.prototype.getObject = function(key) {
-    var value = this.getItem(key);
-    return value && JSON.parse(value);
-}
 
 
 

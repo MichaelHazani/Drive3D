@@ -6,17 +6,24 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+<link href='https://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <link rel="stylesheet" href="./css/style.css">
     </head>
 
     <body>
-        <div id="example"></div>
-        <div class="rotating progress" id="progress"></div>
+        <img src="./images/banner.png" alt="dropbox 3d banner" class="img-responsive banner">
+        <a href="" class="authlink"><button class="btn btn-primary authstandard">Standard Display</button></a>
+        <!-- <a href="" class="authlink"><button class="btn btn-primary authcardboard">Cool Google Cardboard</button></a> -->
+        <div id="threejs"></div>
+        <!-- <div id="progress"></div> -->
         <div id="status"></div>
         <script src="scripts/src/min/jquery-2.2.4.min.js"></script>
         <script src="https://cdn.rawgit.com/kimmobrunfeldt/progressbar.js/0.6.1/dist/progressbar.js"></script>
         <script src="https://npmcdn.com/dropbox/dist/Dropbox-sdk.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <script src="scripts/src/app.js"></script>
+        <script src="scripts/src/utils.js"></script>
         <script src="scripts/src/min/three.min.js"></script>
         <script src="scripts/src/min/TweenMax.min.js"></script>
         <script src="scripts/src/FirstPersonControls.js"></script>
@@ -24,7 +31,8 @@
         <script src="scripts/src/OrbitControls.js"></script>
         <script src="scripts/src/DeviceOrientationControls.js"></script>
         <script src="scripts/src/StereoEffect.js"></script>
-        <script src="scripts/src/drive3d.js"></script>
+        <script src="scripts/src/drive3dnonrecur.js"></script>
+
         <!-- <script src="scripts/src/db.js"></script> -->
     </body>
 </html>

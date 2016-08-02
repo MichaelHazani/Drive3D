@@ -1,7 +1,7 @@
 {
-  "name": "Drive3D",
+  "name": "Dropbox3D",
   "version": "0.0.1",
-  "description": "Google Drive 4 Google Carboard",
+  "description": "A 3D Dropbox viewer for Google Cardboard",
   "dependencies": {
     "browserify": "^13.0.1",
     "dropbox": "^2.0.0"
