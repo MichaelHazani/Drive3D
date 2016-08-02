@@ -78,7 +78,8 @@ if (!(isAuthenticated())) {
     var dbx = new Dropbox({
         clientId: CLIENT_ID
     });
-    var authUrl = dbx.getAuthenticationUrl('http://localhost:3000/');
+    // var authUrl = dbx.getAuthenticationUrl('http://localhost:3000/');
+    var authUrl = dbx.getAuthenticationUrl('https://www.michaelhazani.com/projects/Dropbox-3D/app/index.html');
     var links = document.getElementsByClassName('authlink');
     for (link in links) {
         links[link].href = authUrl;
@@ -102,7 +103,7 @@ if (!(isAuthenticated())) {
         var percent = loaded / total;
         console.log(Math.round(percent * 100) + "%");
         $("#status").text(percent * 100 + "%");
-            // document.getElementById("status").innerHTML = percent + "%";
+        // document.getElementById("status").innerHTML = percent + "%";
     }
 
 
