@@ -6,18 +6,33 @@ body {
     /*cursor: none;*/
     background: url('../images/background.jpg');
     /*background-color:green;*/
+    background-repeat: no-repeat;
+    background-size: 100%;
 }
 .banner {
     position: absolute;
     /*width: 100%;*/
     margin-top: 20px;
 }
-.authlink {
+
+.postauth {
+  display: none;
+  max-width: 300px;
+}
+
+.authlink, #standard-button, #cardboard-button {
     position: absolute;
     width: 100%;
     margin-top: 35%;
     text-align: center;
+    z-index: 3;
 }
+
+#cardboard-button {
+  margin-top: 40%;
+}
+
+
 .authstandard {
     display: block;
     position: relative;
@@ -30,17 +45,7 @@ body {
     max-width: 300px;
     margin: 0 auto;
 }
-.authcardboard {
-    display: block;
-    position: relative;
-    background-color: #222;
-    opacity: 0.85;
-    z-index: 3;
-    /*width:60%;*/
-    /*height: 100%!important;*/
-    max-width: 300px;
-    margin: 0 auto;
-}
+
 #threejs {
     position: absolute;
     top: 0;

@@ -13762,10 +13762,14 @@ var element, container;
 var clock = new THREE.Clock();
 var raycaster = new THREE.Raycaster();
 var ray = new THREE.Vector2(0.0, 0.0);
+var planeTexture;
+var fileIcons;
+var skyBox;
 
 
 // Programmatic
-
+var dbx;
+var isCardboard = false;
 var manager;
 var CLIENT_ID = '8dyy3xs0p8c97t2';
 var currCollection = {};
@@ -13824,6 +13828,7 @@ if (!(isAuthenticated())) {
         clientId: CLIENT_ID
     });
     var authUrl = dbx.getAuthenticationUrl('http://localhost:3000/');
+    // var authUrl = dbx.getAuthenticationUrl('https://www.michaelhazani.com/projects/Dropbox-3D/app/index.html');
     var links = document.getElementsByClassName('authlink');
     for (link in links) {
         links[link].href = authUrl;
@@ -13834,8 +13839,23 @@ if (!(isAuthenticated())) {
     // $(".progress").css('display', 'block')
     $(".authlink").remove();
     $(".banner").remove();
+    $(".preauth").remove();
+    $(".postauth").css('display', 'block');
 
-    var dbx = new Dropbox({
+    $("#cardboard-button").click(function() {
+        isCardboard = true;
+        launch();
+    });
+
+    $("#standard-button").click(function() {
+        launch();
+    });
+
+}
+
+function launch() {
+
+    dbx = new Dropbox({
         // accessToken: 'teyD2v5ZoUAAAAAAAAAAHVD4sI59CTrcznwVz_9YeiQzH_mN1Xr0S5szatZqTyaB'
         accessToken: getAccessTokenFromUrl()
     });
@@ -13847,7 +13867,7 @@ if (!(isAuthenticated())) {
         var percent = loaded / total;
         console.log(Math.round(percent * 100) + "%");
         $("#status").text(percent * 100 + "%");
-            // document.getElementById("status").innerHTML = percent + "%";
+        // document.getElementById("status").innerHTML = percent + "%";
     }
 
 
@@ -13856,66 +13876,68 @@ if (!(isAuthenticated())) {
         // console.log("ready to go!");
         $('#status').remove();
         init();
-        animate();
+        if (isCardboard) {
+            animateStereo();
+        } else {
+            animate();
+        }
     }
-}
 
 
 
+    // Skybox
+    var imagePrefix = "images/skybox/new2/";
+    var directions = ["xpos", "xneg", "ypos", "yneg", "zpos", "zneg"];
+    var imageSuffix = ".png";
+    var skyGeometry = new THREE.BoxGeometry(5000, 5000, 5000);
 
+    var materialArray = [];
+    for (var i = 0; i < 6; i++)
+        materialArray.push(new THREE.MeshBasicMaterial({
+            map: new THREE.TextureLoader(manager).load(imagePrefix + directions[i] + imageSuffix),
+            side: THREE.BackSide
+        }));
+    var skyMaterial = new THREE.MeshFaceMaterial(materialArray);
+    skyBox = new THREE.Mesh(skyGeometry, skyMaterial);
 
-
-// Skybox
-var imagePrefix = "images/skybox/new2/";
-var directions = ["xpos", "xneg", "ypos", "yneg", "zpos", "zneg"];
-var imageSuffix = ".png";
-var skyGeometry = new THREE.BoxGeometry(5000, 5000, 5000);
-
-var materialArray = [];
-for (var i = 0; i < 6; i++)
-    materialArray.push(new THREE.MeshBasicMaterial({
-        map: new THREE.TextureLoader(manager).load(imagePrefix + directions[i] + imageSuffix),
-        side: THREE.BackSide
-    }));
-var skyMaterial = new THREE.MeshFaceMaterial(materialArray);
-var skyBox = new THREE.Mesh(skyGeometry, skyMaterial);
-
-// filetype images
-var fileIcons = {
-    image: new THREE.TextureLoader(manager).load(
-        'images/filetypes/image.png'
-    ),
-    document: new THREE.TextureLoader(manager).load(
-        'images/filetypes/document.png'
-    ),
-    html: new THREE.TextureLoader(manager).load(
-        'images/filetypes/html.png'
-    ),
-    pdf: new THREE.TextureLoader(manager).load(
-        'images/filetypes/pdf.png'
-    ),
-    music: new THREE.TextureLoader(manager).load(
-        'images/filetypes/music.png'
-    ),
-    other: new THREE.TextureLoader(manager).load(
-        'images/filetypes/file.png'
-    ),
-    zip: new THREE.TextureLoader(manager).load(
-        'images/filetypes/zip.png'
-    ),
-    fileImage: function(filePath) {
-        new THREE.TextureLoader(manager).load(filePath);
+    // filetype images
+    fileIcons = {
+        image: new THREE.TextureLoader(manager).load(
+            'images/filetypes/image.png'
+        ),
+        document: new THREE.TextureLoader(manager).load(
+            'images/filetypes/document.png'
+        ),
+        html: new THREE.TextureLoader(manager).load(
+            'images/filetypes/html.png'
+        ),
+        pdf: new THREE.TextureLoader(manager).load(
+            'images/filetypes/pdf.png'
+        ),
+        music: new THREE.TextureLoader(manager).load(
+            'images/filetypes/music.png'
+        ),
+        other: new THREE.TextureLoader(manager).load(
+            'images/filetypes/file.png'
+        ),
+        zip: new THREE.TextureLoader(manager).load(
+            'images/filetypes/zip.png'
+        ),
+        fileImage: function(filePath) {
+            new THREE.TextureLoader(manager).load(filePath);
+        }
     }
-}
 
-//plane TextureLoader
-var planeTexture = new THREE.TextureLoader().load(
-    'images/textures/patterns/checker.png'
-);
-planeTexture.wrapS = THREE.RepeatWrapping;
-planeTexture.wrapT = THREE.RepeatWrapping;
-planeTexture.repeat = new THREE.Vector2(50, 50);
-planeTexture.anisotropy = renderer.getMaxAnisotropy();
+    //plane TextureLoader
+    planeTexture = new THREE.TextureLoader().load(
+        'images/textures/patterns/checker.png'
+    );
+    planeTexture.wrapS = THREE.RepeatWrapping;
+    planeTexture.wrapT = THREE.RepeatWrapping;
+    planeTexture.repeat = new THREE.Vector2(50, 50);
+    planeTexture.anisotropy = renderer.getMaxAnisotropy();
+
+}
 
 
 // --------------------------------------------------------------------------------INIT---------------------------------------------------------------------
@@ -14355,7 +14377,7 @@ function animateStereo(t) {
         rayCastSphere.scale.y += 0.03;
         rayCastSphere.scale.z += 0.03;
     }
-    requestAnimationFrame(animate);
+    requestAnimationFrame(animateStereo);
     update(clock.getDelta());
     renderStereo(clock.getDelta());
 }
