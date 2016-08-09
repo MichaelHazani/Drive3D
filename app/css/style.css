@@ -1,35 +1,27 @@
 body {
-    margin: 0px;
+    /*margin: 0px;*/
     overflow: hidden;
     font-family: 'Inconsolata';
     font-size: 17px;
-    /*cursor: none;*/
     background: url('../images/background.jpg');
-    /*background-color:green;*/
     background-repeat: no-repeat;
     background-size: 100%;
-}
-.banner {
-    position: absolute;
-    /*width: 100%;*/
-    margin-top: 20px;
 }
 
 .postauth {
   display: none;
-  max-width: 300px;
 }
 
-.authlink, #standard-button, #cardboard-button {
-    position: absolute;
-    width: 100%;
-    margin-top: 35%;
+.authlink {
     text-align: center;
     z-index: 3;
 }
 
-#cardboard-button {
-  margin-top: 40%;
+#cardboard-button, #standard-button {
+  position: relative;
+  background-color: #222;
+  opacity: 0.85;
+      z-index: 3;
 }
 
 
@@ -45,6 +37,7 @@ body {
     max-width: 300px;
     margin: 0 auto;
 }
+
 
 #threejs {
     position: absolute;

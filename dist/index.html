@@ -12,21 +12,38 @@
     </head>
 
     <body>
-        <img src="./images/banner.png" alt="dropbox 3d banner" class="img-responsive banner">
-        <a href="" class="authlink">
-            <button class="btn btn-primary authstandard">Standard Display</button>
-        </a>
-        <!-- <a href="" class="authlink"><button class="btn btn-primary authcardboard">Cool Google Cardboard</button></a> -->
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xs-12">
+                    <img src="./images/banner.png" alt="dropbox 3d banner" class="img-responsive banner">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12 text-center preauth">
+                    <a href="" class="authlink">
+                        <button class="btn btn-primary authstandard">Authenticate</button>
+                    </a>
+                </div>
+            </div>
+            <div class="row ">
+              <div class="col-xs-12 text-center postauth">
+
+                <button class="btn btn-primary" id="standard-button">Standard Display</button>
+                <button class="btn btn-primary" id="cardboard-button">Google Cardboard</button>
+              </div>
+
+            </div>
+        </div>
         <div id="threejs"></div>
         <!-- <div id="progress"></div> -->
         <div id="status"></div>
-        <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
-        <script src="https://cdn.rawgit.com/kimmobrunfeldt/progressbar.js/0.6.1/dist/progressbar.js"></script>
-        <script src="https://npmcdn.com/dropbox/dist/Dropbox-sdk.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-        <script src="scripts/app.js"></script>
+    </div>
 
-
-        <!-- <script src="scripts/src/db.js"></script> -->
-    </body>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+    <script src="https://npmcdn.com/dropbox/dist/Dropbox-sdk.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="./scripts/app.js"></script>
+    <!-- <script src="scripts/src/db.js"></script> -->
+</body>
 </html>

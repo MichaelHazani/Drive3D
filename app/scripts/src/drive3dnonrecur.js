@@ -93,10 +93,8 @@ if (!(isAuthenticated())) {
     console.log("Authenticated");
     // $(".progress").css('display', 'block')
     $(".authlink").remove();
-    $(".banner").remove();
     $(".preauth").remove();
     $(".postauth").css('display', 'block');
-
     $("#cardboard-button").click(function() {
         isCardboard = true;
         launch();
@@ -109,6 +107,10 @@ if (!(isAuthenticated())) {
 }
 
 function launch() {
+  $(".banner").remove();
+
+    $(document.body).css('cursor', 'none');
+        $(".postauth").css('display', 'none');
 
     dbx = new Dropbox({
         // accessToken: 'teyD2v5ZoUAAAAAAAAAAHVD4sI59CTrcznwVz_9YeiQzH_mN1Xr0S5szatZqTyaB'
@@ -284,7 +286,8 @@ function init() {
     var pillarBallMat = new THREE.MeshPhongMaterial({
         color: 0x333333,
         specular: 0x333333,
-        transparent: true
+        transparent: true,
+        opacity: 0.5,
             // shading: THREE.FlatShading
     });
 
@@ -315,11 +318,11 @@ function init() {
 
 
     //helper raycast ball
-    var sphereGeo = new THREE.SphereGeometry(1, 12, 30);
+    var sphereGeo = new THREE.SphereGeometry(1.5, 30, 30);
     sphereGeo.dynamic = true;
-    var sphereMat = new THREE.MeshNormalMaterial();
+    var sphereMat = new THREE.MeshPhongMaterial({color: 0x7fd5f0, transparent: true, opacity: 0.8});
     rayCastSphere = new THREE.Mesh(sphereGeo, sphereMat);
-    rayCastSphere.position.set(0, 0, -40);
+    rayCastSphere.position.set(0, 0, -48);
     rayCastSphere.name = "rayCastSphere";
     camera.add(rayCastSphere);
 
