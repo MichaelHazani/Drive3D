@@ -13827,8 +13827,8 @@ if (!(isAuthenticated())) {
     var dbx = new Dropbox({
         clientId: CLIENT_ID
     });
-    var authUrl = dbx.getAuthenticationUrl('http://localhost:3000/');
-    // var authUrl = dbx.getAuthenticationUrl('https://www.michaelhazani.com/projects/Dropbox-3D/app/index.html');
+    // var authUrl = dbx.getAuthenticationUrl('http://localhost:3000/');
+    var authUrl = dbx.getAuthenticationUrl('https://www.michaelhazani.com/projects/Dropbox-3D/index.html');
     var links = document.getElementsByClassName('authlink');
     for (link in links) {
         links[link].href = authUrl;
