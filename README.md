@@ -9,10 +9,14 @@
 ###Utilizes [three.js](http://threejs.org) and the [Dropbox JS SDK](http://dropbox.github.io/dropbox-sdk-js/)
 ###Dev Boilerplate courtesy of the wonderful [Harvest](https://github.com/ryanbenson/Harvest)
 
-###Installation for local build:
+###Build instructions:
 
 * Clone
-* cd [whereever you installed it]
 * NPM Install
-* NPM install gulp (required as an extra step)
-* gulp
+* "gulp" to run, "gulp deploy" to build
+
+
+####TODO:
+* File Download and CRUD
+* Bug Hunt
+* Admin Panel
